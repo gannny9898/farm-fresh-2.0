@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Farm Fresh</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles for debugging */
+        .debug-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #6c757d;
+            display: none;
+        }
+        .debug-info.show {
+            display: block;
+        }
+        .debug-info pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .debug-toggle {
+            background: none;
+            border: none;
+            color: #6c757d;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>🌾 Farm Fresh</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="login.html" class="login-link active">Login</a>
+            <a href="cart.html" class="cart-link">
+                <span class="cart-icon">🛒</span>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="showForm('login')">Login</button>
+                <button class="tab-btn" onclick="showForm('register')">Register</button>
+            </div>
+
+            <form id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" value="customer@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" value="password123" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+                <p class="form-footer">Forgot password? <a href="#">Reset here</a></p>
+                <button type="button" class="debug-toggle" onclick="toggleDebugInfo()">Show debug info</button>
+                <button type="button" class="debug-toggle" onclick="showRegisteredUsers()">Show registered users</button>
+                <div id="debug-info" class="debug-info">
+                    <h4>Debug Information</h4>
+                    <pre id="debug-content"></pre>
+                </div>
+            </form>
+
+            <form id="register-form" class="auth-form hidden">
+                <h2>Register as Farmer/Customer</h2>
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Phone Number</label>
+                    <input type="tel" id="register-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-type">I am a:</label>
+                    <select id="user-type" required onchange="toggleUserFields()">
+                        <option value="">Select type</option>
+                        <option value="farmer">Farmer</option>
+                        <option value="customer">Customer</option>
+                    </select>
+                </div>
+
+                <!-- Farmer-specific fields -->
+                <div id="farmer-fields" class="conditional-fields hidden">
+                    <div class="form-group">
+                        <label for="farm-name">Farm Name</label>
+                        <input type="text" id="farm-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="farm-location">Farm Location</label>
+                        <input type="text" id="farm-location">
+                    </div>
+                    <div class="form-group">
+                        <label>Products You Sell</label>
+                        <div class="category-selection">
+                            <div class="category-item">
+                                <input type="checkbox" id="category-vegetables" name="farm-products[]" value="1">
+                                <label for="category-vegetables">
+                                    <span class="category-icon">🥬</span>
+                                    <span class="category-name">Vegetables</span>
+                                </label>
+                            </div>
+                            <div class="category-item">
+                                <input type="checkbox" id="category-fruits" name="farm-products[]" value="2">
+                                <label for="category-fruits">
+                                    <span class="category-icon">🍎</span>
+                                    <span class="category-name">Fruits</span>
+                                </label>
+                            </div>
+                            <div class="category-item">
+                                <input type="checkbox" id="category-dairy" name="farm-products[]" value="3">
+                                <label for="category-dairy">
+                                    <span class="category-icon">🥛</span>
+                                    <span class="category-name">Dairy Products</span>
+                                </label>
+                            </div>
+                            <div class="category-item">
+                                <input type="checkbox" id="category-grains" name="farm-products[]" value="4">
+                                <label for="category-grains">
+                                    <span class="category-icon">🌾</span>
+                                    <span class="category-name">Grains</span>
+                                </label>
+                            </div>
+                            <div class="category-item">
+                                <input type="checkbox" id="category-herbs" name="farm-products[]" value="5">
+                                <label for="category-herbs">
+                                    <span class="category-icon">🌿</span>
+                                    <span class="category-name">Herbs</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="category-error" id="category-error" style="display: none;">
+                            Please select at least one category
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="organic-certified">
+                            <input type="checkbox" id="organic-certified">
+                            Organic Certified
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Customer-specific fields -->
+                <div id="customer-fields" class="conditional-fields hidden">
+                    <div class="form-group">
+                        <label for="delivery-address">Delivery Address</label>
+                        <textarea id="delivery-address" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="preferred-delivery">Preferred Delivery Time</label>
+                        <select id="preferred-delivery">
+                            <option value="morning">Morning (9AM - 12PM)</option>
+                            <option value="afternoon">Afternoon (12PM - 5PM)</option>
+                            <option value="evening">Evening (5PM - 8PM)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" style="position: relative; z-index: 100;">Register</button>
+                <button type="button" class="debug-toggle" onclick="toggleDebugInfo()">Show debug info</button>
+                <div id="register-debug-info" class="debug-info">
+                    <h4>Debug Information</h4>
+                    <pre id="register-debug-content"></pre>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul class="contact-info">
+                    <li><strong>Email:</strong> <a href="mailto:ganeshlaxmankotwade@gmail.com">ganeshlaxmankotwade@gmail.com</a></li>
+                    <li><strong>Phone:</strong> <a href="tel:+919373842949">+91 9373842949</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to top button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </div>
+
+    <script src="data-manager.js"></script>
+    <script src="access-control.js"></script>
+    <script src="mock_api.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Debug functions
+        function addDebugInfo(message, isLogin = true) {
+            const debugContent = isLogin ? document.getElementById('debug-content') : document.getElementById('register-debug-content');
+            const timestamp = new Date().toLocaleTimeString();
+            debugContent.innerHTML += `[${timestamp}] ${message}\n`;
+            debugContent.scrollTop = debugContent.scrollHeight;
+        }
+
+        function toggleDebugInfo() {
+            const debugInfo = document.getElementById('debug-info');
+            const registerDebugInfo = document.getElementById('register-debug-info');
+            
+            if (document.getElementById('login-form').classList.contains('hidden')) {
+                registerDebugInfo.classList.toggle('show');
+            } else {
+                debugInfo.classList.toggle('show');
+            }
+        }
+        
+        // Function to display registered users for debugging
+        function showRegisteredUsers() {
+            try {
+                const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+                const debugInfo = document.getElementById('debug-info');
+                const debugContent = document.getElementById('debug-content');
+                
+                // Show debug info if it's hidden
+                debugInfo.classList.add('show');
+                
+                // Clear previous content
+                debugContent.innerHTML = '';
+                
+                if (registeredUsers.length === 0) {
+                    addDebugInfo('No registered users found in localStorage');
+                } else {
+                    addDebugInfo(`Found ${registeredUsers.length} registered users:`);
+                    
+                    // Display each user (without password)
+                    registeredUsers.forEach((user, index) => {
+                        const userCopy = {...user};
+                        delete userCopy.password; // Don't show passwords
+                        
+                        addDebugInfo(`User ${index + 1}: ${JSON.stringify(userCopy, null, 2)}`);
+                    });
+                }
+            } catch (e) {
+                console.error('Error displaying registered users:', e);
+                addDebugInfo(`ERROR: ${e.message}`);
+            }
+        }
+
+        // Add event listeners to track button hover events
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerButton = document.querySelector('#register-form .submit-btn');
+            if (registerButton) {
+                registerButton.addEventListener('mouseenter', function() {
+                    addDebugInfo('Mouse entered register button', false);
+                });
+                
+                registerButton.addEventListener('mouseleave', function() {
+                    addDebugInfo('Mouse left register button', false);
+                });
+            }
+        });
+
+        // Override the login form submission
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.textContent;
+                submitBtn.textContent = 'Logging in...';
+                submitBtn.disabled = true;
+                
+                // Get form data
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value;
+                
+                // Validate form data
+                if (!email) {
+                    throw new Error('Please enter your email');
+                }
+                
+                if (!password) {
+                    throw new Error('Please enter your password');
+                }
+                
+                addDebugInfo(`Login attempt with email: ${email}`);
+                
+                // Send login request
+                addDebugInfo(`Sending request to: api/login.php`);
+                const response = await fetch('api/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                addDebugInfo(`Response status: ${response.status}`);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    addDebugInfo(`Non-JSON response: ${text}`);
+                    throw new Error('Server returned non-JSON response. Please try again later.');
+                }
+                
+                const result = await response.json();
+                addDebugInfo(`Response data: ${JSON.stringify(result, null, 2)}`);
+                
+                if (result.success) {
+                    // Save user data and token to localStorage
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    localStorage.setItem('token', result.token);
+                    
+                    // Show success message
+                    showNotification('Login successful! Redirecting...', 'success');
+                    
+                    // Redirect based on user type
+                    setTimeout(() => {
+                        const user = result.user;
+                        if (user.user_type === 'admin') {
+                            window.location.href = 'admin-dashboard.html';
+                        } else if (user.user_type === 'farmer') {
+                            window.location.href = 'farmer-dashboard.html';
+                        } else if (user.user_type === 'customer') {
+                            window.location.href = 'customer-dashboard.html';
+                        } else {
+                            // Default fallback
+                            window.location.href = 'admin-dashboard.html';
+                        }
+                    }, 1500);
+                } else {
+                    throw new Error(result.message || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                addDebugInfo(`Error: ${error.message}`);
+                showNotification(error.message || 'Login failed. Please try again.', 'error');
+            } finally {
+                // Restore button state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.textContent = 'Login';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Override the register form submission
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Define submitBtn outside try block so it's accessible in finally
+            const submitBtn = this.querySelector('button[type="submit"]');
+            
+            try {
+                // Show loading state
+                submitBtn.textContent = 'Registering...';
+                submitBtn.disabled = true;
+
+                // Validate form data
+                const formData = {
+                    email: document.getElementById('register-email').value.trim(),
+                    password: document.getElementById('register-password').value,
+                    full_name: document.getElementById('register-name').value.trim(),
+                    phone: document.getElementById('register-phone').value.trim(),
+                    user_type: document.getElementById('user-type').value
+                };
+
+                // Validate required fields
+                for (const [key, value] of Object.entries(formData)) {
+                    if (!value) {
+                        throw new Error(`Please fill in ${key.replace('_', ' ')}`);
+                    }
+                }
+
+                addDebugInfo(`Form data collected: ${JSON.stringify(formData, null, 2)}`, false);
+
+                // Add user type specific data
+                if (formData.user_type === 'farmer') {
+                    // Get selected categories
+                    const categoryCheckboxes = document.querySelectorAll('input[name="farm-products[]"]:checked');
+                    
+                    const selectedCategories = Array.from(categoryCheckboxes)
+                        .map(checkbox => parseInt(checkbox.value));
+                    
+                    addDebugInfo(`Selected categories: ${JSON.stringify(selectedCategories)}`, false);
+
+                    if (selectedCategories.length === 0) {
+                        showNotification('Please select at least one product category', 'error');
+                        throw new Error('Please select at least one product category');
+                    }
+
+                    formData.farm_name = document.getElementById('farm-name').value.trim();
+                    formData.farm_location = document.getElementById('farm-location').value.trim();
+                    formData.product_categories = selectedCategories;
+
+                    // Validate farmer-specific fields
+                    if (!formData.farm_name || !formData.farm_location) {
+                        throw new Error('Please fill in all farmer details');
+                    }
+                } else if (formData.user_type === 'customer') {
+                    formData.delivery_address = document.getElementById('delivery-address').value.trim();
+                    
+                    // Validate customer-specific fields
+                    if (!formData.delivery_address) {
+                        throw new Error('Please fill in delivery address');
+                    }
+                }
+
+                addDebugInfo(`Sending data to: api/register.php`, false);
+                
+                // Send registration request
+                const response = await fetch('api/register.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                addDebugInfo(`Response status: ${response.status}`, false);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    addDebugInfo(`Non-JSON response: ${text}`, false);
+                    throw new Error('Server returned non-JSON response. Check server logs.');
+                }
+                
+                const result = await response.json();
+                addDebugInfo(`Response data: ${JSON.stringify(result, null, 2)}`, false);
+
+                if (result.status === 'success') {
+                    showNotification('Registration successful! Please login.', 'success');
+                    // Clear form
+                    this.reset();
+                    // Switch to login form after a short delay
+                    setTimeout(() => {
+                        showForm('login');
+                    }, 2000);
+                } else {
+                    throw new Error(result.message || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                addDebugInfo(`Error: ${error.message}`, false);
+                showNotification(error.message || 'Registration failed. Please try again.', 'error');
+            } finally {
+                // Restore button state
+                submitBtn.textContent = 'Register';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Check if localStorage is working properly
+        function checkLocalStorage() {
+            try {
+                // Test if localStorage is available
+                const testKey = '_test_localStorage_';
+                localStorage.setItem(testKey, 'test');
+                const testValue = localStorage.getItem(testKey);
+                localStorage.removeItem(testKey);
+                
+                if (testValue !== 'test') {
+                    console.error('localStorage is not working properly');
+                    addDebugInfo('ERROR: localStorage is not working properly');
+                    showNotification('Your browser storage is not working properly. Login/registration may not work.', 'error');
+                    return false;
+                }
+                
+                // Check if registered users exist
+                const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+                addDebugInfo(`Found ${registeredUsers.length} registered users in localStorage`);
+                
+                return true;
+            } catch (e) {
+                console.error('localStorage error:', e);
+                addDebugInfo(`ERROR: localStorage error: ${e.message}`);
+                showNotification('Your browser storage is not accessible. Login/registration may not work.', 'error');
+                return false;
+            }
+        }
+        
+        // Call the check when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLocalStorage();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Farm Fresh</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>🌾 Farm Fresh</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html" class="cart-link">
+                <span class="cart-icon">🛒</span>
+                <span class="cart-count">0</span>
+            </a>
+            <!-- The login link will be replaced by the user menu via JavaScript -->
+            <a href="login.html" class="login-link">Login</a>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>My Profile</h1>
+            <p id="profile-welcome">Welcome back!</p>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-sidebar">
+                <div class="user-info-summary">
+                    <div class="user-avatar">
+                        <span id="user-initial"></span>
+                    </div>
+                    <div class="user-details">
+                        <h3 id="sidebar-user-name"></h3>
+                        <p id="sidebar-user-type"></p>
+                    </div>
+                </div>
+                <div class="profile-menu">
+                    <button class="profile-menu-item active" data-section="account">
+                        <span class="menu-icon">👤</span> Account Information
+                    </button>
+                    <button class="profile-menu-item" data-section="orders">
+                        <span class="menu-icon">📦</span> My Orders
+                    </button>
+                    <button class="profile-menu-item farmer-only" data-section="sales">
+                        <span class="menu-icon">💰</span> My Sales
+                    </button>
+                    <button class="profile-menu-item farmer-only" data-section="products">
+                        <span class="menu-icon">🥕</span> My Products
+                    </button>
+                    <button class="profile-menu-item" data-section="addresses">
+                        <span class="menu-icon">📍</span> Addresses
+                    </button>
+                    <button class="profile-menu-item" data-section="notifications">
+                        <span class="menu-icon">🔔</span> Notifications
+                    </button>
+                    <button class="profile-menu-item" id="logout-btn">
+                        <span class="menu-icon">🚪</span> Logout
+                    </button>
+                </div>
+            </div>
+
+            <div class="profile-main">
+                <!-- Account Information Section -->
+                <div class="profile-section active" id="account-section">
+                    <h2>Account Information</h2>
+                    <form id="profile-form" class="profile-form">
+                        <div class="form-group">
+                            <label for="profile-name">Full Name</label>
+                            <input type="text" id="profile-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-email">Email</label>
+                            <input type="email" id="profile-email" required readonly>
+                            <small>Email cannot be changed</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-phone">Phone Number</label>
+                            <input type="tel" id="profile-phone" required>
+                        </div>
+
+                        <!-- Customer-specific fields -->
+                        <div id="customer-fields">
+                            <div class="form-group">
+                                <label for="profile-address">Delivery Address</label>
+                                <textarea id="profile-address" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Farmer-specific fields -->
+                        <div id="farmer-fields">
+                            <div class="form-group">
+                                <label for="profile-farm-name">Farm Name</label>
+                                <input type="text" id="profile-farm-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-farm-location">Farm Location</label>
+                                <input type="text" id="profile-farm-location">
+                            </div>
+                            <div class="form-group">
+                                <label>Products You Sell</label>
+                                <div class="category-selection">
+                                    <!-- Categories will be loaded dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="submit-btn">Save Changes</button>
+                        </div>
+                    </form>
+
+                    <div class="password-section">
+                        <h3>Change Password</h3>
+                        <form id="password-form" class="profile-form">
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <input type="password" id="current-password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input type="password" id="new-password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm New Password</label>
+                                <input type="password" id="confirm-password" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="submit-btn">Update Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Orders Section -->
+                <div class="profile-section" id="orders-section">
+                    <h2>My Orders</h2>
+                    <div class="orders-list">
+                        <!-- Orders will be loaded dynamically -->
+                        <div class="empty-state">
+                            <p>You don't have any orders yet.</p>
+                            <a href="products.html" class="cta-button">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sales Section (Farmer Only) -->
+                <div class="profile-section" id="sales-section">
+                    <h2>My Sales</h2>
+                    <div class="sales-dashboard">
+                        <div class="sales-stats">
+                            <div class="stat-card">
+                                <div class="stat-value">₹0</div>
+                                <div class="stat-label">Total Sales</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">0</div>
+                                <div class="stat-label">Orders</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">0</div>
+                                <div class="stat-label">Products</div>
+                            </div>
+                        </div>
+                        
+                        <div class="sales-chart">
+                            <h3>Sales Overview</h3>
+                            <div class="chart-placeholder">
+                                <p>Sales data visualization will appear here</p>
+                            </div>
+                        </div>
+                        
+                        <div class="recent-sales">
+                            <h3>Recent Sales</h3>
+                            <div class="empty-state">
+                                <p>You don't have any sales yet.</p>
+                                <a href="#" class="cta-button">Add Products</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Section (Farmer Only) -->
+                <div class="profile-section" id="products-section">
+                    <h2>My Products</h2>
+                    <div class="products-management">
+                        <div class="products-actions">
+                            <button class="cta-button">Add New Product</button>
+                        </div>
+                        
+                        <div class="products-list">
+                            <div class="empty-state">
+                                <p>You haven't added any products yet.</p>
+                                <p>Start selling by adding your first product!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses Section -->
+                <div class="profile-section" id="addresses-section">
+                    <h2>My Addresses</h2>
+                    <div class="addresses-list">
+                        <div class="empty-state">
+                            <p>You haven't added any addresses yet.</p>
+                            <button class="cta-button">Add New Address</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Section -->
+                <div class="profile-section" id="notifications-section">
+                    <h2>Notifications</h2>
+                    <div class="notifications-settings">
+                        <h3>Email Notifications</h3>
+                        <div class="notification-option">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="notification-details">
+                                <h4>Order Updates</h4>
+                                <p>Receive notifications about your order status</p>
+                            </div>
+                        </div>
+                        <div class="notification-option">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="notification-details">
+                                <h4>Promotions</h4>
+                                <p>Receive notifications about deals and offers</p>
+                            </div>
+                        </div>
+                        <div class="notification-option">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="notification-details">
+                                <h4>Newsletter</h4>
+                                <p>Receive our weekly newsletter</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul class="contact-info">
+                    <li><strong>Email:</strong> <a href="mailto:ganeshlaxmankotwade@gmail.com">ganeshlaxmankotwade@gmail.com</a></li>
+                    <li><strong>Phone:</strong> <a href="tel:+919373842949">+91 9373842949</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to top button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            if (!isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Get user data
+            const user = getCurrentUser();
+            
+            // Update welcome message
+            document.getElementById('profile-welcome').textContent = `Welcome back, ${user.full_name}!`;
+            
+            // Update sidebar user info
+            document.getElementById('sidebar-user-name').textContent = user.full_name;
+            document.getElementById('sidebar-user-type').textContent = user.user_type === 'farmer' ? 'Farmer' : 'Customer';
+            document.getElementById('user-initial').textContent = user.full_name.charAt(0).toUpperCase();
+            
+            // Fill profile form with user data
+            document.getElementById('profile-name').value = user.full_name || '';
+            document.getElementById('profile-email').value = user.email || '';
+            document.getElementById('profile-phone').value = user.phone || '';
+            
+            // Show/hide user-specific fields
+            const farmerFields = document.getElementById('farmer-fields');
+            const customerFields = document.getElementById('customer-fields');
+            const farmerOnlyMenuItems = document.querySelectorAll('.farmer-only');
+            
+            if (user.user_type === 'farmer') {
+                farmerFields.style.display = 'block';
+                customerFields.style.display = 'none';
+                
+                // Show farmer-only menu items
+                farmerOnlyMenuItems.forEach(item => {
+                    item.style.display = 'flex';
+                });
+                
+                // Fill farmer-specific fields
+                document.getElementById('profile-farm-name').value = user.farm_name || '';
+                document.getElementById('profile-farm-location').value = user.farm_location || '';
+                
+                // Load categories
+                loadCategories();
+            } else {
+                farmerFields.style.display = 'none';
+                customerFields.style.display = 'block';
+                
+                // Hide farmer-only menu items
+                farmerOnlyMenuItems.forEach(item => {
+                    item.style.display = 'none';
+                });
+                
+                // Fill customer-specific fields
+                document.getElementById('profile-address').value = user.delivery_address || '';
+            }
+            
+            // Handle profile menu
+            const menuItems = document.querySelectorAll('.profile-menu-item');
+            const sections = document.querySelectorAll('.profile-section');
+            
+            menuItems.forEach(item => {
+                if (item.id === 'logout-btn') {
+                    item.addEventListener('click', logout);
+                    return;
+                }
+                
+                item.addEventListener('click', function() {
+                    const sectionId = this.dataset.section + '-section';
+                    
+                    // Update active menu item
+                    menuItems.forEach(mi => mi.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected section
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === sectionId) {
+                            section.classList.add('active');
+                            
+                            // Load section-specific data
+                            if (sectionId === 'orders-section') {
+                                loadOrders();
+                            } else if (sectionId === 'sales-section' && user.user_type === 'farmer') {
+                                loadSales();
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Handle profile form submission
+            document.getElementById('profile-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitBtn = this.querySelector('.submit-btn');
+                const originalBtnText = submitBtn.textContent;
+                submitBtn.textContent = 'Saving...';
+                submitBtn.disabled = true;
+                
+                try {
+                    // Prepare data for API
+                    const formData = {
+                        user_id: user.id,
+                        user_type: user.user_type,
+                        full_name: document.getElementById('profile-name').value,
+                        phone: document.getElementById('profile-phone').value
+                    };
+                    
+                    // Add user type specific data
+                    if (user.user_type === 'farmer') {
+                        formData.farm_name = document.getElementById('profile-farm-name').value;
+                        formData.farm_location = document.getElementById('profile-farm-location').value;
+                        
+                        // Get selected categories
+                        const categoryCheckboxes = document.querySelectorAll('input[name="profile-categories[]"]:checked');
+                        formData.product_categories = Array.from(categoryCheckboxes).map(cb => parseInt(cb.value));
+                    } else {
+                        formData.delivery_address = document.getElementById('profile-address').value;
+                    }
+                    
+                    // Send data to API
+                    const response = await fetch('api/update_profile.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Update stored user data
+                        if (result.user) {
+                            localStorage.setItem('user', JSON.stringify(result.user));
+                        }
+                        
+                        showNotification('Profile updated successfully', 'success');
+                    } else {
+                        showNotification(result.message || 'Failed to update profile', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    showNotification('An error occurred while updating your profile', 'error');
+                } finally {
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            });
+            
+            // Handle password form submission
+            document.getElementById('password-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showNotification('Please fill in all password fields', 'error');
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match', 'error');
+                    return;
+                }
+                
+                const submitBtn = this.querySelector('.submit-btn');
+                const originalBtnText = submitBtn.textContent;
+                submitBtn.textContent = 'Updating...';
+                submitBtn.disabled = true;
+                
+                try {
+                    // Prepare data for API
+                    const passwordData = {
+                        user_id: user.id,
+                        current_password: currentPassword,
+                        new_password: newPassword
+                    };
+                    
+                    // Send data to API
+                    const response = await fetch('api/change_password.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(passwordData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showNotification('Password updated successfully', 'success');
+                        this.reset();
+                    } else {
+                        showNotification(result.message || 'Failed to update password', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating password:', error);
+                    showNotification('An error occurred while updating your password', 'error');
+                } finally {
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            });
+        });
+        
+        // Function to load categories
+        async function loadCategories() {
+            const categorySelection = document.querySelector('.category-selection');
+            const user = getCurrentUser();
+            
+            try {
+                // Show loading state
+                categorySelection.innerHTML = '<p>Loading categories...</p>';
+                
+                // Fetch categories from API
+                const response = await fetch('api/get_categories.php');
+                const result = await response.json();
+                
+                if (!result.success || !result.categories) {
+                    throw new Error(result.message || 'Failed to load categories');
+                }
+                
+                const categories = result.categories;
+                
+                // Get user's selected categories
+                const userCategories = user.product_categories || [];
+                const userCategoryIds = userCategories.map(cat => parseInt(cat.category_id));
+                
+                // Generate HTML for categories
+                const categoriesHTML = categories.map(category => {
+                    const isChecked = userCategoryIds.includes(parseInt(category.id)) ? 'checked' : '';
+                    // Assign an emoji based on category name
+                    let icon = '🌱'; // Default icon
+                    
+                    if (category.name.toLowerCase().includes('vegetable')) icon = '🥬';
+                    else if (category.name.toLowerCase().includes('fruit')) icon = '🍎';
+                    else if (category.name.toLowerCase().includes('dairy')) icon = '🥛';
+                    else if (category.name.toLowerCase().includes('grain')) icon = '🌾';
+                    else if (category.name.toLowerCase().includes('herb')) icon = '🌿';
+                    
+                    return `
+                        <div class="category-item">
+                            <input type="checkbox" id="category-${category.id}" name="profile-categories[]" value="${category.id}" ${isChecked}>
+                            <label for="category-${category.id}">
+                                <span class="category-icon">${icon}</span>
+                                <span class="category-name">${category.name}</span>
+                            </label>
+                        </div>
+                    `;
+                }).join('');
+                
+                if (categoriesHTML) {
+                    categorySelection.innerHTML = categoriesHTML;
+                } else {
+                    categorySelection.innerHTML = '<p>No categories available</p>';
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                categorySelection.innerHTML = '<p>Failed to load categories. Please try again later.</p>';
+            }
+        }
+
+        // Function to load user orders
+        async function loadOrders() {
+            const ordersContainer = document.querySelector('.orders-list');
+            const user = getCurrentUser();
+            
+            try {
+                // Show loading state
+                ordersContainer.innerHTML = '<div class="loading">Loading your orders...</div>';
+                
+                // Fetch orders from API
+                const response = await fetch(`api/get_user_orders.php?user_id=${user.id}&user_type=${user.user_type}`);
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.message || 'Failed to load orders');
+                }
+                
+                const orders = result.orders || [];
+                
+                if (orders.length === 0) {
+                    // No orders found
+                    ordersContainer.innerHTML = `
+                        <div class="empty-state">
+                            <p>You don't have any orders yet.</p>
+                            <a href="products.html" class="cta-button">Shop Now</a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Generate HTML for orders
+                let ordersHTML = '<div class="orders-grid">';
+                
+                orders.forEach(order => {
+                    // Format date
+                    const orderDate = new Date(order.order_date);
+                    const formattedDate = orderDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    
+                    // Get status class
+                    let statusClass = 'pending';
+                    if (order.status === 'processing') statusClass = 'processing';
+                    if (order.status === 'shipped') statusClass = 'shipped';
+                    if (order.status === 'delivered') statusClass = 'delivered';
+                    if (order.status === 'cancelled') statusClass = 'cancelled';
+                    
+                    // Generate order card
+                    ordersHTML += `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div class="order-info">
+                                    <h3>Order #${order.id}</h3>
+                                    <p class="order-date">${formattedDate}</p>
+                                </div>
+                                <span class="order-status ${statusClass}">${order.status}</span>
+                            </div>
+                            <div class="order-details">
+                                <p><strong>Total:</strong> ₹${parseFloat(order.total_amount).toFixed(2)}</p>
+                                <p><strong>Items:</strong> ${order.item_count}</p>
+                                ${order.payment_method ? `<p><strong>Payment:</strong> ${order.payment_method}</p>` : ''}
+                                ${user.user_type === 'farmer' && order.customer_name ? `<p><strong>Customer:</strong> ${order.customer_name}</p>` : ''}
+                            </div>
+                            <div class="order-items">
+                    `;
+                    
+                    // Add order items
+                    if (order.items && order.items.length > 0) {
+                        order.items.forEach(item => {
+                            ordersHTML += `
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <img src="${item.product_image || 'images/product-placeholder.jpg'}" alt="${item.product_name}">
+                                    </div>
+                                    <div class="item-details">
+                                        <h4>${item.product_name}</h4>
+                                        ${user.user_type === 'customer' && item.farm_name ? `<p class="farm-name">from ${item.farm_name}</p>` : ''}
+                                        <p class="item-price">₹${parseFloat(item.price).toFixed(2)} × ${item.quantity}</p>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        ordersHTML += `<p>No items found for this order.</p>`;
+                    }
+                    
+                    ordersHTML += `
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                ordersHTML += '</div>';
+                ordersContainer.innerHTML = ordersHTML;
+                
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                ordersContainer.innerHTML = `
+                    <div class="error-state">
+                        <p>Failed to load your orders. Please try again later.</p>
+                        <button class="cta-button" onclick="loadOrders()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to load farmer sales
+        async function loadSales() {
+            const salesContainer = document.querySelector('.sales-dashboard');
+            const user = getCurrentUser();
+            
+            if (user.user_type !== 'farmer') return;
+            
+            try {
+                // Show loading state in stats cards
+                document.querySelectorAll('.stat-value').forEach(stat => {
+                    stat.innerHTML = '<span class="loading-spinner"></span>';
+                });
+                
+                // Show loading state in recent sales
+                document.querySelector('.recent-sales').innerHTML = `
+                    <h3>Recent Sales</h3>
+                    <div class="loading">Loading your sales data...</div>
+                `;
+                
+                // Fetch orders from API (same endpoint as orders, but we'll process differently)
+                const response = await fetch(`api/get_user_orders.php?user_id=${user.id}&user_type=${user.user_type}`);
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.message || 'Failed to load sales data');
+                }
+                
+                const orders = result.orders || [];
+                
+                // Calculate sales statistics
+                let totalSales = 0;
+                let totalOrders = orders.length;
+                let totalProducts = 0;
+                let productSet = new Set();
+                
+                orders.forEach(order => {
+                    totalSales += parseFloat(order.total_amount);
+                    
+                    if (order.items && order.items.length > 0) {
+                        order.items.forEach(item => {
+                            productSet.add(item.product_id);
+                        });
+                    }
+                });
+                
+                totalProducts = productSet.size;
+                
+                // Update stats
+                document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = `₹${totalSales.toFixed(2)}`;
+                document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = totalOrders;
+                document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = totalProducts;
+                
+                // Update recent sales
+                const recentSalesContainer = document.querySelector('.recent-sales');
+                
+                if (orders.length === 0) {
+                    recentSalesContainer.innerHTML = `
+                        <h3>Recent Sales</h3>
+                        <div class="empty-state">
+                            <p>You don't have any sales yet.</p>
+                            <a href="#" class="cta-button">Add Products</a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Take only the 5 most recent orders
+                const recentOrders = orders.slice(0, 5);
+                
+                let recentSalesHTML = `<h3>Recent Sales</h3><div class="recent-sales-list">`;
+                
+                recentOrders.forEach(order => {
+                    // Format date
+                    const orderDate = new Date(order.order_date);
+                    const formattedDate = orderDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    
+                    recentSalesHTML += `
+                        <div class="recent-sale-item">
+                            <div class="sale-info">
+                                <h4>Order #${order.id}</h4>
+                                <p>${formattedDate}</p>
+                            </div>
+                            <div class="sale-customer">
+                                <p>${order.customer_name}</p>
+                            </div>
+                            <div class="sale-amount">
+                                <p class="amount">₹${parseFloat(order.total_amount).toFixed(2)}</p>
+                                <span class="status ${order.status}">${order.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                recentSalesHTML += `</div>`;
+                recentSalesContainer.innerHTML = recentSalesHTML;
+                
+            } catch (error) {
+                console.error('Error loading sales data:', error);
+                
+                // Reset stats
+                document.querySelectorAll('.stat-value').forEach((stat, index) => {
+                    stat.textContent = index === 0 ? '₹0' : '0';
+                });
+                
+                // Show error in recent sales
+                document.querySelector('.recent-sales').innerHTML = `
+                    <h3>Recent Sales</h3>
+                    <div class="error-state">
+                        <p>Failed to load your sales data. Please try again later.</p>
+                        <button class="cta-button" onclick="loadSales()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

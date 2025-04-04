@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Profile - Farm Fresh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 2rem;
+        }
+        
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4CAF50;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-photo-placeholder {
+            font-size: 3rem;
+            color: #aaa;
+        }
+        
+        .profile-photo-upload {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            text-align: center;
+            padding: 5px 0;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .profile-photo:hover .profile-photo-upload {
+            opacity: 1;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .rating-stars {
+            display: flex;
+            margin-right: 0.5rem;
+        }
+        
+        .star {
+            color: #FFD700;
+            font-size: 1.2rem;
+            margin-right: 2px;
+        }
+        
+        .rating-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .profile-badges {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .badge {
+            background-color: #f0f8ff;
+            color: #4169e1;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .badge.organic {
+            background-color: #f0fff0;
+            color: #2e8b57;
+        }
+        
+        .badge.verified {
+            background-color: #fff0f5;
+            color: #ff69b4;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            border-bottom-color: #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .farm-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .detail-card {
+            background-color: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .detail-card h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .review-form {
+            background-color: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .review-form h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+        
+        .rating-input {
+            display: flex;
+            flex-direction: row-reverse;
+            margin-bottom: 1rem;
+        }
+        
+        .rating-input input {
+            display: none;
+        }
+        
+        .rating-input label {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #ddd;
+            padding: 0 0.1rem;
+        }
+        
+        .rating-input label:hover,
+        .rating-input label:hover ~ label,
+        .rating-input input:checked ~ label {
+            color: #FFD700;
+        }
+        
+        .review-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .review-submit {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .review-submit:hover {
+            background-color: #45a049;
+        }
+        
+        .reviews-container {
+            margin-top: 2rem;
+        }
+        
+        .review-item {
+            border-bottom: 1px solid #eee;
+            padding: 1.5rem 0;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+        
+        .reviewer-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .reviewer-name {
+            font-weight: 500;
+        }
+        
+        .review-date {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .review-rating {
+            display: flex;
+        }
+        
+        .review-content p {
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .photo-upload-input {
+            display: none;
+        }
+        
+        .farmer-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .farm-photo {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .photo-upload-btn {
+            background-color: #f9f9f9;
+            border: 2px dashed #ddd;
+            height: 150px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .photo-upload-btn:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .photo-upload-icon {
+            font-size: 2rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>🌾 Farm Fresh</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="#" onclick="redirectToDashboard()">Dashboard</a>
+            <a href="login.html" class="login-link">Login</a>
+            <a href="cart.html" class="cart-link">
+                <span class="cart-icon">🛒</span>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-photo" id="profile-photo-container">
+                <img id="farmer-photo" src="https://via.placeholder.com/150" alt="Farmer Photo">
+                <div class="profile-photo-upload" id="photo-upload-trigger">
+                    Update Photo
+                </div>
+                <input type="file" id="photo-upload" class="photo-upload-input" accept="image/*">
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name" id="farmer-name">Farmer Name</h1>
+                <div class="profile-rating">
+                    <div class="rating-stars" id="average-rating">
+                        <!-- Stars will be added dynamically -->
+                    </div>
+                    <span class="rating-count" id="rating-count">(0 reviews)</span>
+                </div>
+                <div class="profile-badges">
+                    <div class="badge organic" id="organic-badge">🌱 Organic Certified</div>
+                    <div class="badge verified" id="verified-badge">✓ Verified Farmer</div>
+                </div>
+                <p class="profile-description" id="farmer-description">Loading farmer information...</p>
+            </div>
+        </div>
+
+        <div class="profile-tabs">
+            <div class="tab active" data-tab="about">About</div>
+            <div class="tab" data-tab="products">Products</div>
+            <div class="tab" data-tab="reviews">Reviews</div>
+            <div class="tab" data-tab="photos">Farm Photos</div>
+        </div>
+
+        <div class="tab-content active" data-tab="about">
+            <div class="farm-details">
+                <div class="detail-card">
+                    <h3>Farm Information</h3>
+                    <p><strong>Farm Name:</strong> <span id="farm-name">Loading...</span></p>
+                    <p><strong>Location:</strong> <span id="farm-location">Loading...</span></p>
+                    <p><strong>Established:</strong> <span id="farm-established">Loading...</span></p>
+                </div>
+                <div class="detail-card">
+                    <h3>Contact Information</h3>
+                    <p><strong>Email:</strong> <span id="farmer-email">Loading...</span></p>
+                    <p><strong>Phone:</strong> <span id="farmer-phone">Loading...</span></p>
+                </div>
+                <div class="detail-card">
+                    <h3>Product Categories</h3>
+                    <div id="product-categories">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" data-tab="products">
+            <h2>Products from this Farm</h2>
+            <div class="products-grid" id="farmer-products">
+                <!-- Products will be loaded dynamically -->
+                <p>Loading products...</p>
+            </div>
+        </div>
+
+        <div class="tab-content" data-tab="reviews">
+            <h2>Customer Reviews</h2>
+            
+            <div class="review-form" id="review-form">
+                <h3>Write a Review</h3>
+                <div class="rating-input">
+                    <input type="radio" name="rating" id="star5" value="5">
+                    <label for="star5" title="5 stars">★</label>
+                    <input type="radio" name="rating" id="star4" value="4">
+                    <label for="star4" title="4 stars">★</label>
+                    <input type="radio" name="rating" id="star3" value="3">
+                    <label for="star3" title="3 stars">★</label>
+                    <input type="radio" name="rating" id="star2" value="2">
+                    <label for="star2" title="2 stars">★</label>
+                    <input type="radio" name="rating" id="star1" value="1">
+                    <label for="star1" title="1 star">★</label>
+                </div>
+                <textarea class="review-textarea" id="review-comment" placeholder="Share your experience with this farmer..."></textarea>
+                <button type="button" class="review-submit" id="submit-review">Submit Review</button>
+            </div>
+            
+            <div class="reviews-container" id="reviews-container">
+                <!-- Reviews will be loaded dynamically -->
+                <p>Loading reviews...</p>
+            </div>
+        </div>
+
+        <div class="tab-content" data-tab="photos">
+            <h2>Farm Photos</h2>
+            <p>Take a virtual tour of our farm and see where your food comes from.</p>
+            
+            <div class="farmer-photos" id="farm-photos">
+                <!-- Photos will be loaded dynamically -->
+                <div class="photo-upload-btn" id="farm-photo-upload-trigger">
+                    <div class="photo-upload-icon">+</div>
+                    <span>Add Photo</span>
+                </div>
+                <input type="file" id="farm-photo-upload" class="photo-upload-input" accept="image/*">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul class="contact-info">
+                    <li><strong>Email:</strong> <a href="mailto:ganeshlaxmankotwade@gmail.com">ganeshlaxmankotwade@gmail.com</a></li>
+                    <li><strong>Phone:</strong> <a href="tel:+919373842949">+91 9373842949</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="prevent-downloads.js"></script>
+    <script src="mock_api.js"></script>
+    <script src="mock_api_handlers.js"></script>
+    <script src="farmer-profile.js"></script>
+    <script>
+        // Function to redirect to appropriate dashboard based on user type
+        function redirectToDashboard() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) {
+                // If not logged in, redirect to login page
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Redirect based on user type
+            if (user.user_type === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+            } else if (user.user_type === 'farmer') {
+                window.location.href = 'farmer-dashboard.html';
+            } else if (user.user_type === 'customer') {
+                window.location.href = 'customer-dashboard.html';
+            } else {
+                // Default fallback
+                window.location.href = 'admin-dashboard.html';
+            }
+        }
+    </script>
+</body>
+</html> 

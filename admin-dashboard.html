@@ -1,0 +1,1571 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Farm Fresh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            margin: 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 500;
+        }
+
+        .data-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .badge-farmer {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-customer {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .badge-admin {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-shipped {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+
+        .action-btn.delete {
+            background: #e74c3c;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .tab-container {
+            margin-bottom: 1rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .tab-btn.active {
+            color: #4CAF50;
+            border-bottom-color: #4CAF50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .search-box {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-family: inherit;
+        }
+
+        .search-box button {
+            padding: 0.75rem 1rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .json-viewer {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .activity-section {
+            margin-bottom: 0;
+        }
+        
+        .activity-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            display: flex;
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8f9fa;
+        }
+        
+        .activity-registration {
+            background: #d4edda;
+        }
+        
+        .activity-login {
+            background: #cce5ff;
+        }
+        
+        .activity-order {
+            background: #d1ecf1;
+        }
+        
+        .activity-product {
+            background: #fff3cd;
+        }
+        
+        .activity-export {
+            background: #e2e3e5;
+        }
+        
+        .activity-warning {
+            background: #f8d7da;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-description {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .empty-message {
+            padding: 1rem;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        .quick-actions {
+            margin-bottom: 0;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .action-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .export-btn {
+            background: #e9f7ef;
+        }
+        
+        .refresh-btn {
+            background: #e3f2fd;
+        }
+        
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .notification {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            animation: slideIn 0.3s ease, fadeOut 0.5s ease 2.5s forwards;
+            max-width: 300px;
+        }
+        
+        .notification.success {
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .notification.error {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        @keyframes slideIn {
+            from {transform: translateX(100%); opacity: 0;}
+            to {transform: translateX(0); opacity: 1;}
+        }
+        
+        @keyframes fadeOut {
+            from {opacity: 1;}
+            to {opacity: 0; transform: translateY(-10px);}
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .tab-buttons {
+                overflow-x: auto;
+            }
+
+            .tab-btn {
+                padding: 0.75rem 1rem;
+            }
+
+            .dashboard-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .analytics-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .analytics-card h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .chart-container {
+            height: 250px;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>🌾 Farm Fresh</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="admin-dashboard.html" class="active">Dashboard</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <div id="admin-name"></div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="value" id="total-users">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <div class="value" id="total-orders">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Products</h3>
+                <div class="value" id="total-products">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Revenue</h3>
+                <div class="value" id="total-revenue">₹0</div>
+            </div>
+        </div>
+        
+        <div class="dashboard-row">
+            <div class="section activity-section">
+                <div class="section-header">
+                    <h2>Recent Activities</h2>
+                    <div id="last-updated">Last updated: Just now</div>
+                </div>
+                <div id="activity-list" class="activity-list">
+                    <!-- Activities will be loaded dynamically -->
+                </div>
+            </div>
+            
+            <div class="section quick-actions">
+                <div class="section-header">
+                    <h2>Quick Actions</h2>
+                </div>
+                <div class="action-buttons">
+                    <button onclick="exportDataFile('users')" class="action-btn export-btn">
+                        <span class="action-icon">👤</span>
+                        Export Users
+                    </button>
+                    <button onclick="exportDataFile('orders')" class="action-btn export-btn">
+                        <span class="action-icon">🛒</span>
+                        Export Orders
+                    </button>
+                    <button onclick="exportDataFile('products')" class="action-btn export-btn">
+                        <span class="action-icon">📦</span>
+                        Export Products
+                    </button>
+                    <button onclick="exportDataFile('all')" class="action-btn export-btn">
+                        <span class="action-icon">📊</span>
+                        Export All Data
+                    </button>
+                    <button onclick="window.DataManager.updateAllStats()" class="action-btn refresh-btn">
+                        <span class="action-icon">🔄</span>
+                        Refresh Stats
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showTab('users-tab')">Users</button>
+                    <button class="tab-btn" onclick="showTab('orders-tab')">Orders</button>
+                    <button class="tab-btn" onclick="showTab('products-tab')">Products</button>
+                    <button class="tab-btn" onclick="showTab('data-tab')">Raw Data</button>
+                    <button class="tab-btn" onclick="showTab('analytics-tab')">Analytics</button>
+                </div>
+
+                <div id="users-tab" class="tab-content active">
+                    <div class="section-header">
+                        <h2>User Management</h2>
+                        <div class="search-box">
+                            <input type="text" id="user-search" placeholder="Search users...">
+                            <button onclick="searchUsers()">Search</button>
+                        </div>
+                    </div>
+                    <table class="data-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Users will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="orders-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Order Management</h2>
+                        <div class="search-box">
+                            <input type="text" id="order-search" placeholder="Search orders...">
+                            <button onclick="searchOrders()">Search</button>
+                        </div>
+                    </div>
+                    <table class="data-table" id="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <!-- Orders will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="products-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Product Management</h2>
+                        <div class="search-box">
+                            <input type="text" id="product-search" placeholder="Search products...">
+                            <button onclick="searchProducts()">Search</button>
+                        </div>
+                    </div>
+                    <table class="data-table" id="products-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Product</th>
+                                <th>Farmer</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body">
+                            <!-- Products will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="data-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Raw Data Viewer</h2>
+                    </div>
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" onclick="showDataTab('users-data')">Users Data</button>
+                        <button class="tab-btn" onclick="showDataTab('orders-data')">Orders Data</button>
+                        <button class="tab-btn" onclick="showDataTab('products-data')">Products Data</button>
+                        <button class="tab-btn" onclick="showDataTab('cart-data')">Cart Data</button>
+                        <button class="tab-btn" onclick="showDataTab('localStorage-data')">All localStorage</button>
+                    </div>
+                    <div id="users-data" class="json-viewer tab-content active">
+                        <!-- Users data will be displayed here -->
+                    </div>
+                    <div id="orders-data" class="json-viewer tab-content">
+                        <!-- Orders data will be displayed here -->
+                    </div>
+                    <div id="products-data" class="json-viewer tab-content">
+                        <!-- Products data will be displayed here -->
+                    </div>
+                    <div id="cart-data" class="json-viewer tab-content">
+                        <!-- Cart data will be displayed here -->
+                    </div>
+                    <div id="localStorage-data" class="json-viewer tab-content">
+                        <!-- All localStorage data will be displayed here -->
+                    </div>
+                </div>
+
+                <div id="analytics-tab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Data Analytics</h2>
+                    </div>
+                    
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>User Growth</h3>
+                            <div class="chart-container">
+                                <canvas id="userGrowthChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="analytics-card">
+                            <h3>User Distribution</h3>
+                            <div class="chart-container">
+                                <canvas id="userDistributionChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="analytics-card">
+                            <h3>Recent Registrations</h3>
+                            <div class="chart-container">
+                                <canvas id="recentRegistrationsChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="analytics-card">
+                            <h3>Login Activity</h3>
+                            <div class="chart-container">
+                                <canvas id="loginActivityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to top button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="data-manager.js"></script>
+    <script src="access-control.js"></script>
+    <script src="dashboard-content.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = window.AccessControl.getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Set page title and header based on user role
+            let pageTitle = 'Dashboard';
+            let pageHeader = 'Dashboard';
+            
+            if (window.AccessControl.isAdmin()) {
+                pageTitle = 'Admin Dashboard';
+                pageHeader = 'Admin Dashboard';
+            } else if (window.AccessControl.isFarmer()) {
+                pageTitle = 'Farmer Dashboard';
+                pageHeader = 'Farmer Dashboard';
+            } else if (window.AccessControl.isCustomer()) {
+                pageTitle = 'Customer Dashboard';
+                pageHeader = 'Customer Dashboard';
+            }
+            
+            document.title = pageTitle + ' - Farm Fresh';
+            document.querySelector('.dashboard-header h1').textContent = pageHeader;
+            
+            // Show welcome message with user name
+            document.getElementById('admin-name').textContent = `Welcome, ${user.full_name}`;
+
+            // Configure UI based on user role
+            configureUIForUserRole(user.user_type);
+            
+            // Load data
+            loadUsers();
+            loadOrders();
+            loadProducts();
+            updateStats();
+            loadRawData();
+            loadActivityLog();
+            
+            // Set up real-time updates
+            setupRealTimeUpdates();
+        });
+        
+        // Configure UI based on user role
+        function configureUIForUserRole(userRole) {
+            // Hide admin-only elements if user is not an admin
+            if (userRole !== 'admin') {
+                // Hide admin-only tabs
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    if (btn.textContent === 'Users' || btn.textContent === 'Raw Data') {
+                        btn.style.display = 'none';
+                    }
+                });
+                
+                // Hide export all data button
+                document.querySelector('button[onclick="exportDataFile(\'all\')"]').style.display = 'none';
+                
+                // Hide users export button
+                document.querySelector('button[onclick="exportDataFile(\'users\')"]').style.display = 'none';
+            }
+            
+            // Configure for farmer
+            if (userRole === 'farmer') {
+                // Change Products tab text
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    if (btn.textContent === 'Products') {
+                        btn.textContent = 'My Products';
+                    }
+                    if (btn.textContent === 'Orders') {
+                        btn.textContent = 'Orders for My Products';
+                    }
+                });
+                
+                // Hide products export button
+                document.querySelector('button[onclick="exportDataFile(\'products\')"]').style.display = 'none';
+            }
+            
+            // Configure for customer
+            if (userRole === 'customer') {
+                // Change Orders tab text
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    if (btn.textContent === 'Orders') {
+                        btn.textContent = 'My Orders';
+                    }
+                    if (btn.textContent === 'Products') {
+                        btn.style.display = 'none';
+                    }
+                });
+                
+                // Hide products export button
+                document.querySelector('button[onclick="exportDataFile(\'products\')"]').style.display = 'none';
+                
+                // Hide orders export button
+                document.querySelector('button[onclick="exportDataFile(\'orders\')"]').style.display = 'none';
+            }
+            
+            // Show the first available tab
+            const firstVisibleTab = document.querySelector('.tab-btn:not([style*="display: none"])');
+            if (firstVisibleTab) {
+                firstVisibleTab.click();
+            }
+        }
+        
+        // Set up real-time updates
+        function setupRealTimeUpdates() {
+            // Listen for data stats updates
+            window.addEventListener('dataStats:updated', function(e) {
+                updateStatsDisplay(e.detail);
+            });
+            
+            // Listen for activity log updates
+            window.addEventListener('activityLog:updated', function(e) {
+                updateActivityLogDisplay(e.detail.activity);
+            });
+            
+            // Update stats every 30 seconds
+            setInterval(function() {
+                if (window.DataManager) {
+                    window.DataManager.updateAllStats();
+                }
+            }, 30000);
+        }
+        
+        // Update stats display
+        function updateStatsDisplay(stats) {
+            document.getElementById('total-users').textContent = stats.totalUsers;
+            document.getElementById('total-orders').textContent = stats.totalOrders;
+            document.getElementById('total-products').textContent = stats.totalProducts;
+            document.getElementById('total-revenue').textContent = `₹${stats.totalRevenue.toFixed(2)}`;
+            
+            // Update last updated time
+            const lastUpdated = new Date(stats.lastUpdated);
+            document.getElementById('last-updated').textContent = `Last updated: ${lastUpdated.toLocaleString()}`;
+        }
+        
+        // Update activity log display
+        function updateActivityLogDisplay(activity) {
+            const activityList = document.getElementById('activity-list');
+            if (!activityList) return;
+            
+            // Create new activity item
+            const activityItem = document.createElement('div');
+            activityItem.className = 'activity-item';
+            
+            // Format timestamp
+            const timestamp = new Date(activity.timestamp);
+            const formattedTime = timestamp.toLocaleTimeString();
+            const formattedDate = timestamp.toLocaleDateString();
+            
+            // Set activity icon based on type
+            let icon = '🔔';
+            let typeClass = '';
+            
+            switch(activity.type) {
+                case 'user_registration':
+                    icon = '👤';
+                    typeClass = 'activity-registration';
+                    break;
+                case 'user_login':
+                    icon = '🔑';
+                    typeClass = 'activity-login';
+                    break;
+                case 'new_order':
+                    icon = '🛒';
+                    typeClass = 'activity-order';
+                    break;
+                case 'product_update':
+                    icon = '📦';
+                    typeClass = 'activity-product';
+                    break;
+                case 'data_export':
+                    icon = '📤';
+                    typeClass = 'activity-export';
+                    break;
+                case 'login_failed':
+                    icon = '⚠️';
+                    typeClass = 'activity-warning';
+                    break;
+            }
+            
+            activityItem.innerHTML = `
+                <div class="activity-icon ${typeClass}">${icon}</div>
+                <div class="activity-content">
+                    <div class="activity-description">${activity.description}</div>
+                    <div class="activity-time">${formattedTime} - ${formattedDate}</div>
+                </div>
+            `;
+            
+            // Add to the beginning of the list
+            activityList.insertBefore(activityItem, activityList.firstChild);
+            
+            // Remove oldest item if more than 10
+            if (activityList.children.length > 10) {
+                activityList.removeChild(activityList.lastChild);
+            }
+        }
+
+        // Tab functionality
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-buttons .tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function showDataTab(tabId) {
+            // Hide all data tab contents
+            document.querySelectorAll('#data-tab .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all data tab buttons
+            document.querySelectorAll('#data-tab .tab-buttons .tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected data tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Load users with access control
+        function loadUsers() {
+            // Get users from mock_api.js (for demo purposes)
+            // In a real application, you would fetch this from your server
+            const users = [
+                {
+                    id: 1001,
+                    full_name: 'Test Customer',
+                    email: 'customer@example.com',
+                    phone: '1234567890',
+                    user_type: 'customer'
+                },
+                {
+                    id: 1002,
+                    full_name: 'Test Farmer',
+                    email: 'farmer@example.com',
+                    phone: '9876543210',
+                    user_type: 'farmer'
+                },
+                {
+                    id: 1003,
+                    full_name: 'Admin User',
+                    email: 'admin@example.com',
+                    phone: '5555555555',
+                    user_type: 'admin'
+                }
+            ];
+
+            // Get any registered users from localStorage
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            let allUsers = [...users, ...registeredUsers];
+            
+            // Apply access control filtering
+            allUsers = window.AccessControl.filterDataForCurrentUser(allUsers, 'users');
+
+            // Update users table
+            const usersTableBody = document.getElementById('users-table-body');
+            if (usersTableBody) {
+                usersTableBody.innerHTML = allUsers.map(user => `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.full_name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone}</td>
+                        <td><span class="badge badge-${user.user_type}">${user.user_type}</span></td>
+                        <td>
+                            <button class="action-btn" onclick="viewUser(${user.id})">View</button>
+                            ${window.AccessControl.isAdmin() ? `<button class="action-btn delete" onclick="deleteUser(${user.id})">Delete</button>` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Update total users count if admin
+            if (window.AccessControl.isAdmin()) {
+                document.getElementById('total-users').textContent = allUsers.length;
+            }
+        }
+
+        // Load orders with access control
+        function loadOrders() {
+            // Get orders from localStorage
+            let orders = getOrdersFromLocalStorage();
+            
+            // Apply access control filtering
+            orders = window.AccessControl.filterDataForCurrentUser(orders, 'orders');
+
+            // Update orders table
+            const ordersTableBody = document.getElementById('orders-table-body');
+            if (ordersTableBody) {
+                ordersTableBody.innerHTML = orders.map(order => {
+                    // Format the items list
+                    const itemsList = order.items.map(item => `${item.name} (${item.quantity})`).join(', ');
+                    
+                    // Format the date
+                    const orderDate = new Date(order.orderDate);
+                    const formattedDate = orderDate.toLocaleDateString();
+                    
+                    return `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${order.userName}</td>
+                        <td>${formattedDate}</td>
+                        <td>${itemsList}</td>
+                        <td>₹${order.total.toFixed(2)}</td>
+                        <td><span class="badge status-${order.status}">${order.status}</span></td>
+                        <td>
+                            <button class="action-btn" onclick="viewOrder('${order.id}')">View</button>
+                            ${window.AccessControl.isAdmin() ? `
+                            <button class="action-btn" onclick="updateOrderStatus('${order.id}')">Update</button>
+                            <button class="action-btn delete" onclick="deleteOrder('${order.id}')">Delete</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                    `;
+                }).join('');
+            }
+
+            // Update total orders count and revenue if admin
+            if (window.AccessControl.isAdmin()) {
+                document.getElementById('total-orders').textContent = orders.length;
+                
+                // Calculate total revenue
+                const totalRevenue = orders.reduce((total, order) => total + order.total, 0);
+                document.getElementById('total-revenue').textContent = `₹${totalRevenue.toFixed(2)}`;
+            }
+        }
+
+        // Get orders from localStorage
+        function getOrdersFromLocalStorage() {
+            return JSON.parse(localStorage.getItem('orders')) || [];
+        }
+
+        // Update order status
+        function updateOrderStatus(orderId) {
+            const orders = getOrdersFromLocalStorage();
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                alert('Order not found!');
+                return;
+            }
+            
+            const newStatus = prompt('Enter new status (pending, processing, shipped, delivered, cancelled):', order.status);
+            
+            if (newStatus && ['pending', 'processing', 'shipped', 'delivered', 'cancelled'].includes(newStatus)) {
+                order.status = newStatus;
+                localStorage.setItem('orders', JSON.stringify(orders));
+                loadOrders();
+                loadRawData();
+                alert(`Order status updated to: ${newStatus}`);
+            } else if (newStatus) {
+                alert('Invalid status. Please use: pending, processing, shipped, delivered, or cancelled');
+            }
+        }
+
+        // View order details
+        function viewOrder(orderId) {
+            const orders = getOrdersFromLocalStorage();
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                alert('Order not found!');
+                return;
+            }
+            
+            // Format items for display
+            const itemsDetails = order.items.map(item => 
+                `${item.name} - ₹${item.price.toFixed(2)} x ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}`
+            ).join('\n');
+            
+            const orderDetails = `
+Order ID: ${order.id}
+Customer: ${order.userName} (${order.userEmail})
+Date: ${new Date(order.orderDate).toLocaleString()}
+Status: ${order.status}
+Delivery Address: ${order.deliveryAddress}
+Payment Method: ${order.paymentMethod}
+
+Items:
+${itemsDetails}
+
+Subtotal: ₹${order.subtotal.toFixed(2)}
+Delivery Fee: ₹${order.deliveryFee.toFixed(2)}
+Total: ₹${order.total.toFixed(2)}
+            `;
+            
+            alert(orderDetails);
+        }
+
+        // Delete order
+        function deleteOrder(orderId) {
+            if (confirm(`Are you sure you want to delete order with ID: ${orderId}?`)) {
+                const orders = getOrdersFromLocalStorage();
+                const updatedOrders = orders.filter(order => order.id !== orderId);
+                localStorage.setItem('orders', JSON.stringify(updatedOrders));
+                loadOrders();
+                loadRawData();
+                alert(`Order with ID: ${orderId} deleted successfully!`);
+            }
+        }
+
+        // Load products with access control
+        function loadProducts() {
+            // Mock products data
+            const products = [
+                {
+                    id: 1,
+                    name: 'Organic Tomatoes',
+                    farmer: 'Green Acres Farm',
+                    farmerId: 1002,
+                    category: 'Vegetables',
+                    price: '₹40/kg',
+                    stock: 45
+                },
+                {
+                    id: 2,
+                    name: 'Fresh Carrots',
+                    farmer: 'Sunshine Orchards',
+                    farmerId: 1004,
+                    category: 'Vegetables',
+                    price: '₹30/kg',
+                    stock: 12
+                },
+                {
+                    id: 3,
+                    name: 'Pure Milk',
+                    farmer: 'Happy Cow Dairy',
+                    farmerId: 1005,
+                    category: 'Dairy',
+                    price: '₹50/L',
+                    stock: 25
+                },
+                {
+                    id: 4,
+                    name: 'Organic Apples',
+                    farmer: 'Sunshine Orchards',
+                    farmerId: 1004,
+                    category: 'Fruits',
+                    price: '₹120/kg',
+                    stock: 30
+                }
+            ];
+
+            // Get any products from localStorage
+            const userProducts = JSON.parse(localStorage.getItem('products')) || [];
+            let allProducts = [...products, ...userProducts];
+            
+            // Apply access control filtering
+            allProducts = window.AccessControl.filterDataForCurrentUser(allProducts, 'products');
+
+            // Update products table
+            const productsTableBody = document.getElementById('products-table-body');
+            if (productsTableBody) {
+                productsTableBody.innerHTML = allProducts.map(product => `
+                    <tr>
+                        <td>${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>${product.farmer}</td>
+                        <td>${product.category}</td>
+                        <td>${product.price}</td>
+                        <td>${product.stock}</td>
+                        <td>
+                            <button class="action-btn" onclick="viewProduct(${product.id})">View</button>
+                            ${window.AccessControl.isAdmin() || (window.AccessControl.isFarmer() && product.farmerId === window.AccessControl.getCurrentUser().id) ? 
+                            `<button class="action-btn delete" onclick="deleteProduct(${product.id})">Delete</button>` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Update total products count if admin
+            if (window.AccessControl.isAdmin()) {
+                document.getElementById('total-products').textContent = allProducts.length;
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            // This function would typically fetch real-time statistics from the server
+            // For demo purposes, we're using the counts from our mock data
+        }
+
+        // Load raw data with access control
+        function loadRawData() {
+            // Only admins can see raw data
+            if (!window.AccessControl.isAdmin()) {
+                return;
+            }
+            
+            // Display users data
+            const usersData = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            document.getElementById('users-data').textContent = JSON.stringify(usersData, null, 2);
+
+            // Display orders data
+            const ordersData = JSON.parse(localStorage.getItem('orders')) || [];
+            document.getElementById('orders-data').textContent = JSON.stringify(ordersData, null, 2);
+
+            // Display products data
+            const productsData = JSON.parse(localStorage.getItem('products')) || [];
+            document.getElementById('products-data').textContent = JSON.stringify(productsData, null, 2);
+
+            // Display cart data
+            const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById('cart-data').textContent = JSON.stringify(cartData, null, 2);
+
+            // Display all localStorage data
+            const localStorageData = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                try {
+                    localStorageData[key] = JSON.parse(localStorage.getItem(key));
+                } catch (e) {
+                    localStorageData[key] = localStorage.getItem(key);
+                }
+            }
+            document.getElementById('localStorage-data').textContent = JSON.stringify(localStorageData, null, 2);
+        }
+
+        // Search functions
+        function searchUsers() {
+            const searchTerm = document.getElementById('user-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#users-table tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function searchOrders() {
+            const searchTerm = document.getElementById('order-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#orders-table tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('product-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#products-table tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // View functions
+        function viewUser(userId) {
+            alert(`View user details for ID: ${userId}`);
+            // In a real application, you would show a modal with user details
+        }
+
+        function viewProduct(productId) {
+            alert(`View product details for ID: ${productId}`);
+            // In a real application, you would show a modal with product details
+        }
+
+        // Delete functions
+        function deleteUser(userId) {
+            if (confirm(`Are you sure you want to delete user with ID: ${userId}?`)) {
+                // In a real application, you would send a request to delete the user
+                alert(`User with ID: ${userId} deleted successfully!`);
+                loadUsers();
+            }
+        }
+
+        function deleteProduct(productId) {
+            if (confirm(`Are you sure you want to delete product with ID: ${productId}?`)) {
+                // In a real application, you would send a request to delete the product
+                alert(`Product with ID: ${productId} deleted successfully!`);
+                loadProducts();
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        // Load activity log
+        function loadActivityLog() {
+            const activities = window.DataManager ? 
+                window.DataManager.getRecentActivities(10) : 
+                JSON.parse(localStorage.getItem('activityLog')) || [];
+            
+            const activityList = document.getElementById('activity-list');
+            
+            if (activities.length === 0) {
+                activityList.innerHTML = '<div class="empty-message">No activities recorded yet.</div>';
+                return;
+            }
+            
+            activityList.innerHTML = '';
+            
+            activities.forEach(activity => {
+                // Format timestamp
+                const timestamp = new Date(activity.timestamp);
+                const formattedTime = timestamp.toLocaleTimeString();
+                const formattedDate = timestamp.toLocaleDateString();
+                
+                // Set activity icon based on type
+                let icon = '🔔';
+                let typeClass = '';
+                
+                switch(activity.type) {
+                    case 'user_registration':
+                        icon = '👤';
+                        typeClass = 'activity-registration';
+                        break;
+                    case 'user_login':
+                        icon = '🔑';
+                        typeClass = 'activity-login';
+                        break;
+                    case 'new_order':
+                        icon = '🛒';
+                        typeClass = 'activity-order';
+                        break;
+                    case 'product_update':
+                        icon = '📦';
+                        typeClass = 'activity-product';
+                        break;
+                    case 'data_export':
+                        icon = '📤';
+                        typeClass = 'activity-export';
+                        break;
+                    case 'login_failed':
+                        icon = '⚠️';
+                        typeClass = 'activity-warning';
+                        break;
+                }
+                
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-icon ${typeClass}">${icon}</div>
+                    <div class="activity-content">
+                        <div class="activity-description">${activity.description}</div>
+                        <div class="activity-time">${formattedTime} - ${formattedDate}</div>
+                    </div>
+                `;
+                
+                activityList.appendChild(activityItem);
+            });
+        }
+        
+        // Export data with access control
+        function exportDataFile(dataType = 'all') {
+            // Check permissions
+            let canExport = false;
+            
+            switch(dataType) {
+                case 'users':
+                    canExport = window.AccessControl.isAdmin();
+                    break;
+                case 'orders':
+                    canExport = window.AccessControl.isAdmin() || window.AccessControl.isFarmer();
+                    break;
+                case 'products':
+                    canExport = window.AccessControl.isAdmin();
+                    break;
+                case 'all':
+                    canExport = window.AccessControl.isAdmin();
+                    break;
+                default:
+                    canExport = window.AccessControl.isAdmin();
+            }
+            
+            if (!canExport) {
+                showNotification('You do not have permission to export this data', 'error');
+                return;
+            }
+            
+            if (window.DataManager) {
+                window.DataManager.exportData(dataType);
+                showNotification(`Exported ${dataType} data successfully!`, 'success');
+            } else {
+                showNotification('Data Manager not available', 'error');
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            // Check if notification container exists
+            let container = document.querySelector('.notification-container');
+            
+            // Create container if it doesn't exist
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'notification-container';
+                document.body.appendChild(container);
+            }
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            container.appendChild(notification);
+            
+            // Remove notification after animation
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // User Growth Chart
+            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+            const userGrowthChart = new Chart(userGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Total Users',
+                        data: [2, 4, 8, 16, 20, getSystemStats().totalUsers],
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                        borderColor: 'rgba(76, 175, 80, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // User Distribution Chart
+            const userDistributionCtx = document.getElementById('userDistributionChart').getContext('2d');
+            const stats = getSystemStats();
+            const userDistributionChart = new Chart(userDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Farmers', 'Customers'],
+                    datasets: [{
+                        data: [stats.totalFarmers, stats.totalCustomers],
+                        backgroundColor: [
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(33, 150, 243, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(33, 150, 243, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+            
+            // Recent Registrations Chart
+            const recentRegistrationsCtx = document.getElementById('recentRegistrationsChart').getContext('2d');
+            const recentRegistrationsChart = new Chart(recentRegistrationsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Today', 'Yesterday', '2 Days Ago', '3 Days Ago', '4 Days Ago', '5 Days Ago'],
+                    datasets: [{
+                        label: 'New Registrations',
+                        data: [3, 1, 2, 0, 1, 2],
+                        backgroundColor: 'rgba(156, 39, 176, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Login Activity Chart
+            const loginActivityCtx = document.getElementById('loginActivityChart').getContext('2d');
+            const loginActivityChart = new Chart(loginActivityCtx, {
+                type: 'line',
+                data: {
+                    labels: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', 'Now'],
+                    datasets: [{
+                        label: 'Login Activity',
+                        data: [2, 5, 3, 7, 4, 6, 3, 8],
+                        backgroundColor: 'rgba(233, 30, 99, 0.2)',
+                        borderColor: 'rgba(233, 30, 99, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Store charts in global object for updates
+            window.adminCharts = {
+                userGrowth: userGrowthChart,
+                userDistribution: userDistributionChart,
+                recentRegistrations: recentRegistrationsChart,
+                loginActivity: loginActivityChart
+            };
+            
+            // Listen for data updates to refresh charts
+            window.addEventListener('dataStats:updated', function(e) {
+                updateCharts(e.detail);
+            });
+        }
+        
+        // Update charts with new data
+        function updateCharts(stats) {
+            if (!window.adminCharts) return;
+            
+            // Update User Growth Chart
+            const userGrowthChart = window.adminCharts.userGrowth;
+            userGrowthChart.data.datasets[0].data[5] = stats.totalUsers;
+            userGrowthChart.update();
+            
+            // Update User Distribution Chart
+            const userDistributionChart = window.adminCharts.userDistribution;
+            userDistributionChart.data.datasets[0].data = [stats.totalFarmers, stats.totalCustomers];
+            userDistributionChart.update();
+        }
+        
+        // Get system stats
+        function getSystemStats() {
+            return window.DataManager ? 
+                window.DataManager.getSystemStats() : 
+                JSON.parse(localStorage.getItem('dataStats')) || {
+                    totalUsers: 0,
+                    totalFarmers: 0,
+                    totalCustomers: 0,
+                    totalOrders: 0,
+                    totalProducts: 0,
+                    totalRevenue: 0
+                };
+        }
+        
+        // Initialize charts when analytics tab is shown
+        document.addEventListener('DOMContentLoaded', function() {
+            const analyticsTab = document.getElementById('analytics-tab');
+            const analyticsTabBtn = document.querySelector('.tab-btn:nth-child(5)');
+            
+            analyticsTabBtn.addEventListener('click', function() {
+                // Initialize charts if not already done
+                if (!window.adminCharts) {
+                    setTimeout(initCharts, 100); // Small delay to ensure canvas is visible
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

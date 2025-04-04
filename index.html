@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Farm Fresh - Fresh Products Direct from Farmers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="styles.css?v=1.1">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <h1><i class="fas fa-leaf"></i> Farm Fresh</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="products.html">Products</a>
+            <a href="#" onclick="redirectToDashboard()">Dashboard</a>
+            <a href="login.html" class="login-link">Login</a>
+            <a href="cart.html" class="cart-link">
+                <span class="cart-icon"><i class="fas fa-shopping-cart"></i></span>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+        <button class="mobile-menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- WebGL Hero Section -->
+    <section class="hero" id="hero-canvas-container">
+        <canvas id="hero-canvas" class="hero-canvas"></canvas>
+        <div class="hero-content" data-aos="fade-up" data-aos-delay="200">
+            <h1>Fresh from Farm to Table</h1>
+            <p>Get fresh, organic produce directly from local farmers</p>
+            <a href="products.html" class="cta-button">Shop Now <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+                <span class="stat-number">100+</span>
+                <span class="stat-text">Farmers</span>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="500">
+                <span class="stat-number">500+</span>
+                <span class="stat-text">Products</span>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="600">
+                <span class="stat-number">10K+</span>
+                <span class="stat-text">Customers</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-container">
+        <div class="search-box">
+            <div class="search-input-container">
+                <input type="text" id="search-input" placeholder="Search for fresh products...">
+                <div class="search-suggestions" id="search-suggestions"></div>
+            </div>
+            <button id="search-button"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 data-aos="fade-up">Why Choose Farm Fresh?</h2>
+        <div class="feature-grid">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-seedling feature-icon"></i>
+                <h3>100% Organic</h3>
+                <p>All our products are certified organic and naturally grown</p>
+            </div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-truck feature-icon"></i>
+                <h3>Fast Delivery</h3>
+                <p>Same day delivery to ensure maximum freshness</p>
+            </div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-tag feature-icon"></i>
+                <h3>Best Prices</h3>
+                <p>Direct from farmers means better prices for everyone</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+        <h2 data-aos="fade-up">Browse by Category</h2>
+        <div class="categories-grid">
+            <div class="category-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="category-icon"><i class="fas fa-carrot"></i></div>
+                <h3>Vegetables</h3>
+                <a href="products.html?category=vegetables" class="category-link">View All</a>
+            </div>
+            <div class="category-card" data-aos="fade-up" data-aos-delay="150">
+                <div class="category-icon"><i class="fas fa-apple-alt"></i></div>
+                <h3>Fruits</h3>
+                <a href="products.html?category=fruits" class="category-link">View All</a>
+            </div>
+            <div class="category-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="category-icon"><i class="fas fa-egg"></i></div>
+                <h3>Dairy</h3>
+                <a href="products.html?category=dairy" class="category-link">View All</a>
+            </div>
+            <div class="category-card" data-aos="fade-up" data-aos-delay="250">
+                <div class="category-icon"><i class="fas fa-bread-slice"></i></div>
+                <h3>Bakery</h3>
+                <a href="products.html?category=bakery" class="category-link">View All</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="featured-products">
+        <h2 data-aos="fade-up">Featured Products</h2>
+        <div class="products-grid">
+            <div class="product-card" data-category="vegetables" data-product-id="veg1" data-aos="fade-up" data-aos-delay="100">
+                <div class="product-badge">Fresh</div>
+                <img src="https://images.unsplash.com/photo-1518843875459-f738682238a6" alt="Fresh Vegetables">
+                <h3>Organic Vegetables Bundle</h3>
+                <div class="farmer"><i class="fas fa-user-circle"></i> By: Green Acres Farm</div>
+                <div class="price">₹299.00</div>
+                <button class="add-to-cart" onclick="addToCart('veg1', 'Organic Vegetables Bundle', '₹299.00', 'https://images.unsplash.com/photo-1518843875459-f738682238a6', 'Green Acres Farm')">Add to Cart</button>
+            </div>
+            <div class="product-card" data-category="fruits" data-product-id="fruit1" data-aos="fade-up" data-aos-delay="150">
+                <div class="product-badge">Seasonal</div>
+                <img src="https://images.unsplash.com/photo-1519996529931-28324d5a630e" alt="Fresh Fruits">
+                <h3>Seasonal Fruits Pack</h3>
+                <div class="farmer"><i class="fas fa-user-circle"></i> By: Sunshine Orchards</div>
+                <div class="price">₹399.00</div>
+                <button class="add-to-cart" onclick="addToCart('fruit1', 'Seasonal Fruits Pack', '₹399.00', 'https://images.unsplash.com/photo-1519996529931-28324d5a630e', 'Sunshine Orchards')">Add to Cart</button>
+            </div>
+            <div class="product-card" data-category="dairy" data-product-id="dairy1" data-aos="fade-up" data-aos-delay="200">
+                <div class="product-badge">Organic</div>
+                <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150" alt="Fresh Milk">
+                <h3>Organic Milk</h3>
+                <div class="farmer"><i class="fas fa-user-circle"></i> By: Happy Cow Dairy</div>
+                <div class="price">₹89.00</div>
+                <button class="add-to-cart" onclick="addToCart('dairy1', 'Organic Milk', '₹89.00', 'https://images.unsplash.com/photo-1550583724-b2692b85b150', 'Happy Cow Dairy')">Add to Cart</button>
+            </div>
+        </div>
+        <div class="view-all" data-aos="fade-up">
+            <a href="products.html" class="cta-button">View All Products <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <h2 data-aos="fade-up">What Our Customers Say</h2>
+        <div class="testimonials-slider">
+            <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="100">
+                <div class="testimonial-content">
+                    <div class="testimonial-text">
+                        <i class="fas fa-quote-left"></i>
+                        <p>I've been ordering from Farm Fresh for over a year. The quality is consistently excellent and the produce is so much fresher than what I find in supermarkets.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Customer" class="testimonial-image">
+                        <div class="author-info">
+                            <h4>Priya Sharma</h4>
+                            <p>Regular Customer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="150">
+                <div class="testimonial-content">
+                    <div class="testimonial-text">
+                        <i class="fas fa-quote-left"></i>
+                        <p>As a chef, I need the freshest ingredients. Farm Fresh delivers not just fresh produce but also incredible variety. Their seasonal fruits are exceptional!</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Customer" class="testimonial-image">
+                        <div class="author-info">
+                            <h4>Rajesh Patel</h4>
+                            <p>Professional Chef</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="200">
+                <div class="testimonial-content">
+                    <div class="testimonial-text">
+                        <i class="fas fa-quote-left"></i>
+                        <p>I appreciate knowing where my food comes from. The direct connection with farmers through Farm Fresh gives me peace of mind about what I feed my family.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Customer" class="testimonial-image">
+                        <div class="author-info">
+                            <h4>Anita Desai</h4>
+                            <p>Health Enthusiast</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </section>
+
+    <!-- Farmers Section -->
+    <section class="farmers-section">
+        <div class="farmers-content" data-aos="fade-right">
+            <h2>Meet Our Farmers</h2>
+            <p>We work with passionate local farmers who are dedicated to sustainable and organic farming practices. Each product on our platform comes with a story and a direct connection to the person who grew it.</p>
+            <a href="#" class="cta-button">Learn More <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="farmers-image" data-aos="fade-left">
+            <img src="https://images.unsplash.com/photo-1581578017093-35f3b833f210" alt="Farmer working">
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <h2 data-aos="fade-up">Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                <div class="faq-question">
+                    <h3>How does Farm Fresh ensure product quality?</h3>
+                    <div class="faq-toggle"><i class="fas fa-plus"></i></div>
+                </div>
+                <div class="faq-answer">
+                    <p>We work directly with vetted farmers who follow organic and sustainable practices. All products undergo quality checks before being delivered to ensure you receive only the freshest items.</p>
+                </div>
+            </div>
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="150">
+                <div class="faq-question">
+                    <h3>What areas do you deliver to?</h3>
+                    <div class="faq-toggle"><i class="fas fa-plus"></i></div>
+                </div>
+                <div class="faq-answer">
+                    <p>We currently deliver to major cities and surrounding areas. Enter your pincode during checkout to check if we deliver to your location.</p>
+                </div>
+            </div>
+            <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                <div class="faq-question">
+                    <h3>How do I become a supplier?</h3>
+                    <div class="faq-toggle"><i class="fas fa-plus"></i></div>
+                </div>
+                <div class="faq-answer">
+                    <p>If you're a farmer interested in joining our platform, please register as a farmer and our team will reach out to you for verification and onboarding.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+        <div class="newsletter-container" data-aos="fade-up">
+            <h2>Stay Updated</h2>
+            <p>Subscribe to our newsletter for seasonal updates, special offers, and farming tips</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Your email address" required>
+                <button type="submit" class="cta-button">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Farm Fresh</h3>
+                <p>Connecting farmers directly with consumers for the freshest organic produce.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul class="contact-info">
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:ganeshlaxmankotwade@gmail.com">ganeshlaxmankotwade@gmail.com</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+919373842949">+91 9373842949</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to top button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Notification popup -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Include JS files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="webgl-animations.js?v=1.1"></script>
+    <script src="data-manager.js"></script>
+    <script src="access-control.js"></script>
+    <script src="mock_api.js"></script>
+    <script src="mock_api_handlers.js"></script>
+    <script src="script.js?v=1.1"></script>
+    <script src="fallback.js?v=1.1"></script>
+    <script src="prevent-downloads.js"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50,
+            delay: 100,
+            easing: 'ease-in-out'
+        });
+
+        // Function to redirect to appropriate dashboard based on user type
+        function redirectToDashboard() {
+            const user = window.AccessControl.getCurrentUser();
+            if (!user) {
+                // If not logged in, redirect to login page
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Redirect based on user type
+            if (user.user_type === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+            } else if (user.user_type === 'farmer') {
+                window.location.href = 'farmer-dashboard.html';
+            } else if (user.user_type === 'customer') {
+                window.location.href = 'customer-dashboard.html';
+            } else {
+                // Default fallback
+                window.location.href = 'admin-dashboard.html';
+            }
+        }
+        
+        // Update cart count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = totalItems;
+            
+            // Initialize data manager
+            if (window.DataManager) {
+                window.DataManager.updateAllStats();
+            }
+            
+            // Update login/dashboard link based on user status
+            updateNavLinks();
+
+            // Initialize testimonial slider
+            initTestimonialSlider();
+
+            // Initialize FAQ accordions
+            initFaqAccordions();
+        });
+        
+        // Update navigation links based on user login status
+        function updateNavLinks() {
+            const user = window.AccessControl.getCurrentUser();
+            const loginLink = document.querySelector('.login-link');
+            
+            if (user) {
+                loginLink.textContent = 'Account';
+                loginLink.href = '#';
+                loginLink.onclick = function() {
+                    redirectToDashboard();
+                    return false;
+                };
+            } else {
+                loginLink.textContent = 'Login';
+                loginLink.href = 'login.html';
+                loginLink.onclick = null;
+            }
+        }
+
+        // Initialize testimonial slider functionality
+        function initTestimonialSlider() {
+            const slides = document.querySelectorAll('.testimonial-slide');
+            const dots = document.querySelectorAll('.dot');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach(slide => slide.style.display = 'none');
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                slides[index].style.display = 'block';
+                dots[index].classList.add('active');
+                currentSlide = index;
+            }
+
+            // Initialize first slide
+            showSlide(0);
+
+            // Add click event to dots
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                });
+            });
+
+            // Auto-advance slides
+            setInterval(() => {
+                let nextSlide = (currentSlide + 1) % slides.length;
+                showSlide(nextSlide);
+            }, 5000);
+        }
+
+        // Initialize FAQ accordions
+        function initFaqAccordions() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    // Toggle current item
+                    item.classList.toggle('active');
+                    const toggle = item.querySelector('.faq-toggle i');
+                    toggle.classList.toggle('fa-plus');
+                    toggle.classList.toggle('fa-minus');
+                    
+                    // Close other items
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                            const otherToggle = otherItem.querySelector('.faq-toggle i');
+                            otherToggle.classList.add('fa-plus');
+                            otherToggle.classList.remove('fa-minus');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Export data as JSON (modified to show in modal instead of downloading)
+        function exportData(key) {
+            const data = localStorage.getItem(key);
+            
+            // Create modal to display data instead of downloading
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>${key} Data</h2>
+                    <pre>${data ? JSON.stringify(JSON.parse(data), null, 2) : 'No data available'}</pre>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Close modal when clicking the X or outside the modal
+            modal.querySelector('.close').onclick = function() {
+                document.body.removeChild(modal);
+            };
+            
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            };
+        }
+
+        // Add a button for admins to view data (instead of automatic downloads)
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = window.AccessControl.getCurrentUser();
+            if (user && user.user_type === 'admin') {
+                const footer = document.querySelector('.footer-bottom');
+                const dataButton = document.createElement('button');
+                dataButton.textContent = 'View Stored Data';
+                dataButton.className = 'admin-data-button';
+                dataButton.style.cssText = 'margin-top: 10px; padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;';
+                dataButton.onclick = function() {
+                    exportData('registeredUsers');
+                };
+                footer.appendChild(dataButton);
+            }
+        });
+    </script>
+</body>
+</html> 

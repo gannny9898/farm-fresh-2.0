@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - Farm Fresh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .settings-header {
+            margin-bottom: 2rem;
+        }
+
+        .settings-header h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .settings-header p {
+            color: #666;
+        }
+
+        .settings-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .settings-card h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="password"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .profile-image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #4CAF50;
+            margin-bottom: 1rem;
+        }
+
+        .image-upload-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .image-upload-btn:hover {
+            background: #3d8b40;
+        }
+
+        .image-upload-info {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: #3d8b40;
+        }
+
+        .conditional-fields {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .conditional-fields.show {
+            display: block;
+        }
+
+        .category-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .category-item {
+            position: relative;
+        }
+
+        .category-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .category-item label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .category-item input[type="checkbox"]:checked + label {
+            background: #e9f7ef;
+            border: 1px solid #4CAF50;
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-name {
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .notification {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .notification.success {
+            background: #4CAF50;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>🌾 Farm Fresh</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="#" onclick="redirectToDashboard()">Dashboard</a>
+            <a href="login.html" class="login-link">Login</a>
+            <a href="cart.html" class="cart-link">
+                <span class="cart-icon">🛒</span>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="settings-container">
+        <div class="settings-header">
+            <h1>Profile Settings</h1>
+            <p>Update your profile information and preferences</p>
+        </div>
+
+        <div class="settings-card">
+            <h2>Profile Photo</h2>
+            <div class="profile-image-container">
+                <img src="https://via.placeholder.com/150" alt="Profile Photo" class="profile-image" id="profile-image">
+                <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                <button class="image-upload-btn" onclick="document.getElementById('image-upload').click()">Upload New Photo</button>
+                <p class="image-upload-info">Maximum file size: 5MB. Supported formats: JPG, PNG, GIF.</p>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <h2>Personal Information</h2>
+            <form id="profile-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-type">Account Type</label>
+                        <input type="text" id="user-type" readonly>
+                    </div>
+                </div>
+
+                <!-- Farmer-specific fields -->
+                <div id="farmer-fields" class="conditional-fields">
+                    <div class="form-group">
+                        <label for="farm-name">Farm Name</label>
+                        <input type="text" id="farm-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="farm-location">Farm Location</label>
+                        <input type="text" id="farm-location">
+                    </div>
+                    <div class="form-group">
+                        <label for="farming-since">Farming Since (Year)</label>
+                        <input type="text" id="farming-since">
+                    </div>
+                    <div class="form-group">
+                        <label>Products You Sell</label>
+                        <div class="category-selection">
+                            <div class="category-item">
+                                <input type="checkbox" id="category-vegetables" name="farm-products[]" value="1">
+                                <label for="category-vegetables">
+                                    <span class="category-icon">🥬</span>
+                                    <span class="category-name">Vegetables</span>
+                                </label>
+                            </div>
+                            <div class="category-item">
+                                <input type="checkbox" id="category-fruits" name="farm-products[]" value="2">
+                                <label for="category-fruits">
+                                    <span class="category-icon">🍎</span>
+                                    <span class="category-name">Fruits</span>
+                                </label>
+                            </div>
+                            <div class="category-item">
+                                <input type="checkbox" id="category-dairy" name="farm-products[]" value="3">
+                                <label for="category-dairy">
+                                    <span class="category-icon">🥛</span>
+                                    <span class="category-name">Dairy Products</span>
+                                </label>
+                            </div>
+                            <div class="category-item">
+                                <input type="checkbox" id="category-grains" name="farm-products[]" value="4">
+                                <label for="category-grains">
+                                    <span class="category-icon">🌾</span>
+                                    <span class="category-name">Grains</span>
+                                </label>
+                            </div>
+                            <div class="category-item">
+                                <input type="checkbox" id="category-herbs" name="farm-products[]" value="5">
+                                <label for="category-herbs">
+                                    <span class="category-icon">🌿</span>
+                                    <span class="category-name">Herbs</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="organic-certified">
+                            <input type="checkbox" id="organic-certified">
+                            Organic Certified
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="farm-description">About Your Farm</label>
+                        <textarea id="farm-description" placeholder="Tell customers about your farm, your farming practices, and what makes your products special..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Customer-specific fields -->
+                <div id="customer-fields" class="conditional-fields">
+                    <div class="form-group">
+                        <label for="delivery-address">Delivery Address</label>
+                        <textarea id="delivery-address" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="preferred-delivery">Preferred Delivery Time</label>
+                        <select id="preferred-delivery">
+                            <option value="morning">Morning (9AM - 12PM)</option>
+                            <option value="afternoon">Afternoon (12PM - 5PM)</option>
+                            <option value="evening">Evening (5PM - 8PM)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Save Changes</button>
+            </form>
+        </div>
+
+        <div class="settings-card">
+            <h2>Change Password</h2>
+            <form id="password-form">
+                <div class="form-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" required>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul class="contact-info">
+                    <li><strong>Email:</strong> <a href="mailto:ganeshlaxmankotwade@gmail.com">ganeshlaxmankotwade@gmail.com</a></li>
+                    <li><strong>Phone:</strong> <a href="tel:+919373842949">+91 9373842949</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="data-manager.js"></script>
+    <script src="access-control.js"></script>
+    <script src="script.js"></script>
+    <script src="prevent-downloads.js"></script>
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const user = window.AccessControl.getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Load user profile data
+            loadUserProfile(user);
+            
+            // Set up image upload handler
+            setupImageUpload();
+            
+            // Set up form submission handlers
+            document.getElementById('profile-form').addEventListener('submit', handleProfileFormSubmit);
+            document.getElementById('password-form').addEventListener('submit', handlePasswordFormSubmit);
+            
+            // Update cart count
+            updateCartCount();
+        });
+        
+        // Load user profile data
+        function loadUserProfile(user) {
+            // Set basic user information
+            document.getElementById('full-name').value = user.full_name || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('phone').value = user.phone || '';
+            document.getElementById('user-type').value = user.user_type || '';
+            
+            // Show appropriate conditional fields based on user type
+            if (user.user_type === 'farmer') {
+                document.getElementById('farmer-fields').classList.add('show');
+                
+                // Set farmer-specific fields
+                document.getElementById('farm-name').value = user.farm_name || '';
+                document.getElementById('farm-location').value = user.farm_location || '';
+                document.getElementById('farming-since').value = user.farming_since || '';
+                document.getElementById('farm-description').value = user.farm_description || '';
+                document.getElementById('organic-certified').checked = user.organic_certified || false;
+                
+                // Set product categories
+                if (user.product_categories && Array.isArray(user.product_categories)) {
+                    user.product_categories.forEach(categoryId => {
+                        const checkbox = document.querySelector(`input[name="farm-products[]"][value="${categoryId}"]`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                    });
+                }
+            } else if (user.user_type === 'customer') {
+                document.getElementById('customer-fields').classList.add('show');
+                
+                // Set customer-specific fields
+                document.getElementById('delivery-address').value = user.delivery_address || '';
+                
+                if (user.preferred_delivery) {
+                    document.getElementById('preferred-delivery').value = user.preferred_delivery;
+                }
+            }
+            
+            // Load profile image if available
+            if (user.profile_image) {
+                document.getElementById('profile-image').src = user.profile_image;
+            }
+        }
+        
+        // Set up image upload handler
+        function setupImageUpload() {
+            const imageUpload = document.getElementById('image-upload');
+            const profileImage = document.getElementById('profile-image');
+            
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                
+                if (!file) return;
+                
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showNotification('File size exceeds 5MB limit', 'error');
+                    return;
+                }
+                
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    showNotification('Please select an image file', 'error');
+                    return;
+                }
+                
+                // Read and display the image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImage.src = e.target.result;
+                    
+                    // Save the image to localStorage
+                    saveProfileImage(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        // Save profile image to localStorage
+        function saveProfileImage(imageData) {
+            const user = window.AccessControl.getCurrentUser();
+            if (!user) return;
+            
+            // Update user object with profile image
+            user.profile_image = imageData;
+            
+            // Save updated user to localStorage
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            // Update registered users if this is a registered user
+            updateRegisteredUser(user);
+            
+            showNotification('Profile photo updated successfully', 'success');
+        }
+        
+        // Handle profile form submission
+        function handleProfileFormSubmit(e) {
+            e.preventDefault();
+            
+            const user = window.AccessControl.getCurrentUser();
+            if (!user) return;
+            
+            // Get form data
+            const formData = {
+                full_name: document.getElementById('full-name').value.trim(),
+                phone: document.getElementById('phone').value.trim()
+            };
+            
+            // Validate required fields
+            if (!formData.full_name) {
+                showNotification('Please enter your full name', 'error');
+                return;
+            }
+            
+            if (!formData.phone) {
+                showNotification('Please enter your phone number', 'error');
+                return;
+            }
+            
+            // Get user type specific data
+            if (user.user_type === 'farmer') {
+                formData.farm_name = document.getElementById('farm-name').value.trim();
+                formData.farm_location = document.getElementById('farm-location').value.trim();
+                formData.farming_since = document.getElementById('farming-since').value.trim();
+                formData.farm_description = document.getElementById('farm-description').value.trim();
+                formData.organic_certified = document.getElementById('organic-certified').checked;
+                
+                // Get selected categories
+                const categoryCheckboxes = document.querySelectorAll('input[name="farm-products[]"]:checked');
+                formData.product_categories = Array.from(categoryCheckboxes).map(checkbox => parseInt(checkbox.value));
+                
+                // Validate farmer-specific fields
+                if (!formData.farm_name) {
+                    showNotification('Please enter your farm name', 'error');
+                    return;
+                }
+                
+                if (!formData.farm_location) {
+                    showNotification('Please enter your farm location', 'error');
+                    return;
+                }
+                
+                if (formData.product_categories.length === 0) {
+                    showNotification('Please select at least one product category', 'error');
+                    return;
+                }
+            } else if (user.user_type === 'customer') {
+                formData.delivery_address = document.getElementById('delivery-address').value.trim();
+                formData.preferred_delivery = document.getElementById('preferred-delivery').value;
+                
+                // Validate customer-specific fields
+                if (!formData.delivery_address) {
+                    showNotification('Please enter your delivery address', 'error');
+                    return;
+                }
+            }
+            
+            // Update user object with new data
+            Object.assign(user, formData);
+            
+            // Save updated user to localStorage
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            // Update registered users if this is a registered user
+            updateRegisteredUser(user);
+            
+            showNotification('Profile updated successfully', 'success');
+        }
+        
+        // Handle password form submission
+        function handlePasswordFormSubmit(e) {
+            e.preventDefault();
+            
+            const user = window.AccessControl.getCurrentUser();
+            if (!user) return;
+            
+            // Get form data
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // Validate passwords
+            if (!currentPassword) {
+                showNotification('Please enter your current password', 'error');
+                return;
+            }
+            
+            if (!newPassword) {
+                showNotification('Please enter a new password', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showNotification('New passwords do not match', 'error');
+                return;
+            }
+            
+            // Check if current password is correct
+            // In a real app, this would be verified on the server
+            // For this demo, we'll check against the mock API users or registered users
+            let isPasswordCorrect = false;
+            
+            // Check in mock API users
+            const mockUsers = [
+                {
+                    id: 1001,
+                    email: 'customer@example.com',
+                    password: 'password123'
+                },
+                {
+                    id: 1002,
+                    email: 'farmer@example.com',
+                    password: 'password123'
+                },
+                {
+                    id: 1003,
+                    email: 'admin@example.com',
+                    password: 'admin123'
+                }
+            ];
+            
+            const mockUser = mockUsers.find(u => u.id === user.id);
+            if (mockUser && mockUser.password === currentPassword) {
+                isPasswordCorrect = true;
+            }
+            
+            // Check in registered users
+            if (!isPasswordCorrect) {
+                const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+                const registeredUser = registeredUsers.find(u => u.id === user.id);
+                
+                if (registeredUser && registeredUser.password === currentPassword) {
+                    isPasswordCorrect = true;
+                }
+            }
+            
+            if (!isPasswordCorrect) {
+                showNotification('Current password is incorrect', 'error');
+                return;
+            }
+            
+            // Update password in registered users
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            const registeredUserIndex = registeredUsers.findIndex(u => u.id === user.id);
+            
+            if (registeredUserIndex !== -1) {
+                registeredUsers[registeredUserIndex].password = newPassword;
+                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            }
+            
+            // Clear password fields
+            document.getElementById('current-password').value = '';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            
+            showNotification('Password updated successfully', 'success');
+        }
+        
+        // Update registered user in localStorage
+        function updateRegisteredUser(user) {
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            const userIndex = registeredUsers.findIndex(u => u.id === user.id);
+            
+            if (userIndex !== -1) {
+                // Update existing user
+                registeredUsers[userIndex] = { ...registeredUsers[userIndex], ...user };
+                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            // Remove any existing notifications
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            // Add to page
+            document.querySelector('.settings-container').prepend(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = totalItems;
+        }
+        
+        // Function to redirect to appropriate dashboard based on user type
+        function redirectToDashboard() {
+            const user = window.AccessControl.getCurrentUser();
+            if (!user) {
+                // If not logged in, redirect to login page
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Redirect based on user type
+            switch (user.user_type) {
+                case 'admin':
+                    window.location.href = 'admin-dashboard.html';
+                    break;
+                case 'farmer':
+                    window.location.href = 'farmer-dashboard.html';
+                    break;
+                case 'customer':
+                    window.location.href = 'customer-dashboard.html';
+                    break;
+                default:
+                    // Default to admin dashboard if user type is unknown
+                    window.location.href = 'admin-dashboard.html';
+            }
+        }
+    </script>
+</body>
+</html> 

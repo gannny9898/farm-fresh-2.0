@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Farm Fresh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-message {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            margin: 0;
+        }
+
+        .view-all {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-info h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .product-info .farmer {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-info .price {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .add-to-cart {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .add-to-cart:hover {
+            background: #45a049;
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .offer-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .offer-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .offer-content {
+            padding: 1rem;
+        }
+
+        .offer-content h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .offer-content p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .offer-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .orders-table th {
+            background: #f8f9fa;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-processing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-shipped {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .action-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .action-btn:hover {
+            background: #45a049;
+        }
+
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-btn {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid, .offers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .orders-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>🌾 Farm Fresh</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="profile.html">Profile</a>
+            <a href="cart.html" class="cart-link">
+                <span class="cart-icon">🛒</span>
+                <span class="cart-count">0</span>
+            </a>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>My Dashboard</h1>
+            <div id="customer-name" class="welcome-message"></div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <div class="value">8</div>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Deliveries</h3>
+                <div class="value">2</div>
+            </div>
+            <div class="stat-card">
+                <h3>Reward Points</h3>
+                <div class="value">125</div>
+            </div>
+            <div class="stat-card">
+                <h3>Saved This Month</h3>
+                <div class="value">₹450</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Special Offers</h2>
+                <a href="products.html?filter=offers" class="view-all">View All Offers</a>
+            </div>
+            <div class="offers-grid" id="offers-grid">
+                <!-- Offers will be loaded dynamically -->
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Most Popular Items</h2>
+                <a href="products.html?filter=popular" class="view-all">View All</a>
+            </div>
+            <div class="category-filter">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="vegetables">Vegetables</button>
+                <button class="category-btn" data-category="fruits">Fruits</button>
+                <button class="category-btn" data-category="dairy">Dairy</button>
+                <button class="category-btn" data-category="grains">Grains</button>
+            </div>
+            <div class="products-grid" id="popular-products-grid">
+                <!-- Popular products will be loaded dynamically -->
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Recent Orders</h2>
+                <a href="profile.html#orders" class="view-all">View All Orders</a>
+            </div>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                    <!-- Orders will be loaded dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Scroll to top button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check if user is logged in and is a customer
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || user.user_type !== 'customer') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Display customer name
+            document.getElementById('customer-name').textContent = `Welcome, ${user.full_name}`;
+
+            // Load mock data
+            loadMockOffers();
+            loadMockPopularProducts();
+            loadMockOrders();
+            updateCartCount();
+
+            // Add event listeners for category filters
+            document.querySelectorAll('.category-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter products
+                    filterProducts(this.dataset.category);
+                });
+            });
+        });
+
+        function loadMockOffers() {
+            const mockOffers = [
+                {
+                    id: 1,
+                    title: 'Weekend Vegetable Bundle',
+                    description: 'Get 20% off on our fresh vegetable bundle this weekend only!',
+                    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999',
+                    discount: '20% OFF'
+                },
+                {
+                    id: 2,
+                    title: 'Buy 2 Get 1 Free on Dairy',
+                    description: 'Purchase any two dairy products and get one free!',
+                    image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150',
+                    discount: 'BUY 2 GET 1'
+                },
+                {
+                    id: 3,
+                    title: 'First Order Discount',
+                    description: 'New customers get ₹100 off on their first order above ₹500',
+                    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e',
+                    discount: '₹100 OFF'
+                }
+            ];
+
+            const offersGrid = document.getElementById('offers-grid');
+            offersGrid.innerHTML = mockOffers.map(offer => `
+                <div class="offer-card">
+                    <img src="${offer.image}" alt="${offer.title}" loading="lazy">
+                    <div class="offer-badge">${offer.discount}</div>
+                    <div class="offer-content">
+                        <h3>${offer.title}</h3>
+                        <p>${offer.description}</p>
+                        <button class="add-to-cart" onclick="viewOffer(${offer.id})">View Offer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadMockPopularProducts() {
+            const mockProducts = [
+                {
+                    id: 1,
+                    name: 'Organic Tomatoes',
+                    farmer: 'Green Acres Farm',
+                    price: '₹40/kg',
+                    image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655',
+                    category: 'vegetables'
+                },
+                {
+                    id: 2,
+                    name: 'Fresh Carrots',
+                    farmer: 'Sunshine Orchards',
+                    price: '₹30/kg',
+                    image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37',
+                    category: 'vegetables'
+                },
+                {
+                    id: 3,
+                    name: 'Pure Milk',
+                    farmer: 'Happy Cow Dairy',
+                    price: '₹50/L',
+                    image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150',
+                    category: 'dairy'
+                },
+                {
+                    id: 4,
+                    name: 'Organic Apples',
+                    farmer: 'Sunshine Orchards',
+                    price: '₹120/kg',
+                    image: 'https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a',
+                    category: 'fruits'
+                },
+                {
+                    id: 5,
+                    name: 'Brown Rice',
+                    farmer: 'Golden Harvest Farms',
+                    price: '₹80/kg',
+                    image: 'https://images.unsplash.com/photo-1586201375761-83865001e8ac',
+                    category: 'grains'
+                },
+                {
+                    id: 6,
+                    name: 'Fresh Strawberries',
+                    farmer: 'Berry Good Farms',
+                    price: '₹150/box',
+                    image: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6',
+                    category: 'fruits'
+                }
+            ];
+
+            // Store products globally for filtering
+            window.allProducts = mockProducts;
+            
+            renderProducts(mockProducts);
+        }
+
+        function renderProducts(products) {
+            const productsGrid = document.getElementById('popular-products-grid');
+            productsGrid.innerHTML = products.map(product => `
+                <div class="product-card" data-category="${product.category}">
+                    <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <div class="farmer">By: ${product.farmer}</div>
+                        <div class="price">${product.price}</div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id}, '${product.name}', '${product.price}', '${product.image}', '${product.farmer}')">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts(category) {
+            if (category === 'all') {
+                renderProducts(window.allProducts);
+            } else {
+                const filteredProducts = window.allProducts.filter(product => product.category === category);
+                renderProducts(filteredProducts);
+            }
+        }
+
+        function loadMockOrders() {
+            // Get current user
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) return;
+            
+            // Get orders from localStorage
+            const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            
+            // Filter orders for current user
+            const userOrders = allOrders.filter(order => order.userId === user.id);
+            
+            // Sort orders by date (newest first)
+            userOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+            
+            // Take only the 3 most recent orders for the dashboard
+            const recentOrders = userOrders.slice(0, 3);
+            
+            // Update stats
+            document.querySelector('.stats-grid .stat-card:nth-child(1) .value').textContent = userOrders.length;
+            
+            const pendingDeliveries = userOrders.filter(order => 
+                ['pending', 'processing', 'shipped'].includes(order.status)
+            ).length;
+            document.querySelector('.stats-grid .stat-card:nth-child(2) .value').textContent = pendingDeliveries;
+            
+            // If no orders, show message
+            const ordersTableBody = document.getElementById('orders-table-body');
+            if (recentOrders.length === 0) {
+                ordersTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center;">You haven't placed any orders yet.</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Render orders
+            ordersTableBody.innerHTML = recentOrders.map(order => {
+                // Format the items list
+                const itemsList = order.items.map(item => item.name).join(', ');
+                
+                // Format the date
+                const orderDate = new Date(order.orderDate);
+                const formattedDate = orderDate.toLocaleDateString();
+                
+                return `
+                <tr>
+                    <td>${order.id}</td>
+                    <td>${formattedDate}</td>
+                    <td>${itemsList}</td>
+                    <td>₹${order.total.toFixed(2)}</td>
+                    <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                    <td>
+                        <button onclick="viewOrder('${order.id}')" class="action-btn">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function addToCart(productId, name, price, image, farmer) {
+            // Get existing cart or initialize empty array
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Check if product already in cart
+            const existingProduct = cart.find(item => item.id === productId);
+            
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: name,
+                    price: price,
+                    image: image,
+                    farmer: farmer,
+                    quantity: 1
+                });
+            }
+            
+            // Save updated cart
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show notification
+            showNotification(`${name} added to cart!`, 'success');
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = totalItems;
+        }
+
+        function viewOffer(offerId) {
+            window.location.href = `products.html?offer=${offerId}`;
+        }
+
+        function viewOrder(orderId) {
+            // Get orders from localStorage
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                showNotification('Order not found!', 'error');
+                return;
+            }
+            
+            // Format items for display
+            const itemsDetails = order.items.map(item => 
+                `${item.name} - ₹${item.price.toFixed(2)} x ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}`
+            ).join('\n');
+            
+            const orderDetails = `
+Order ID: ${order.id}
+Date: ${new Date(order.orderDate).toLocaleString()}
+Status: ${order.status}
+Delivery Address: ${order.deliveryAddress}
+Payment Method: ${order.paymentMethod}
+
+Items:
+${itemsDetails}
+
+Subtotal: ₹${order.subtotal.toFixed(2)}
+Delivery Fee: ₹${order.deliveryFee.toFixed(2)}
+Total: ₹${order.total.toFixed(2)}
+            `;
+            
+            alert(orderDetails);
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        function showNotification(message, type) {
+            // Check if notification container exists
+            let container = document.querySelector('.notification-container');
+            
+            // Create container if it doesn't exist
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'notification-container';
+                document.body.appendChild(container);
+                
+                // Add styles
+                const style = document.createElement('style');
+                style.textContent = `
+                    .notification-container {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 1000;
+                    }
+                    .notification {
+                        background: white;
+                        border-radius: 4px;
+                        box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+                        padding: 15px 20px;
+                        margin-bottom: 10px;
+                        animation: slideIn 0.3s ease, fadeOut 0.5s ease 2.5s forwards;
+                        max-width: 300px;
+                    }
+                    .notification.success {
+                        border-left: 4px solid #4CAF50;
+                    }
+                    .notification.error {
+                        border-left: 4px solid #e74c3c;
+                    }
+                    @keyframes slideIn {
+                        from {transform: translateX(100%); opacity: 0;}
+                        to {transform: translateX(0); opacity: 1;}
+                    }
+                    @keyframes fadeOut {
+                        from {opacity: 1;}
+                        to {opacity: 0; transform: translateY(-10px);}
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            container.appendChild(notification);
+            
+            // Remove notification after animation
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 
