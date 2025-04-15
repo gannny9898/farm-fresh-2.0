@@ -5,23 +5,236 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - Farm Fresh</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .cart-page {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cart-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .cart-items {
+            margin-bottom: 2rem;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 100px 2fr 1fr 1fr 50px;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .cart-item:hover {
+            background: #f9f9f9;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .item-details h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .item-farmer {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-price {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        .item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .item-quantity button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .item-quantity button:hover {
+            background: #f0f0f0;
+        }
+
+        .item-quantity span {
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .item-total {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            color: #ff4444;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-item:hover {
+            transform: scale(1.2);
+        }
+
+        .cart-summary {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .cart-summary div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-top: 1px solid #ddd;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .checkout-btn:hover {
+            background: #45a049;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-cart img {
+            width: 150px;
+            margin-bottom: 1rem;
+        }
+
+        .empty-cart h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .continue-shopping {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .continue-shopping:hover {
+            background: #45a049;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+                grid-template-rows: auto auto;
+                gap: 0.5rem;
+            }
+
+            .item-quantity, .item-total, .remove-item {
+                grid-column: 2;
+            }
+
+            .item-quantity {
+                justify-content: flex-start;
+            }
+
+            .item-total {
+                font-weight: 600;
+            }
+
+            .remove-item {
+                position: absolute;
+                right: 1rem;
+                top: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="logo">
-            <h1>🌾 Farm Fresh</h1>
-        </div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="products.html">Products</a>
-            <a href="#" onclick="redirectToDashboard()">Dashboard</a>
-            <a href="login.html" class="login-link">Login</a>
-            <a href="cart.html" class="cart-link active">
-                <span class="cart-icon">🛒</span>
-                <span class="cart-count">0</span>
-            </a>
+        <div class="navbar-container">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-leaf"></i>
+                    <span>Farm Fresh</span>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="farmers.html">Farmers</a></li>
+                <li><a href="#" id="dashboard-link" onclick="redirectToDashboard(); return false;">Dashboard</a></li>
+                <li>
+                    <a href="cart.html" class="cart-link active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="auth-links">
+                <a href="login.html" id="login-link">Login</a>
+                <a href="register.html" class="register-btn">Register</a>
+            </div>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
         </div>
     </nav>
 
@@ -60,25 +273,35 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>Contact Us</h3>
-                <ul class="contact-info">
-                    <li>
-                        <strong>Email:</strong>
-                        <a href="mailto:ganeshlaxmankotwade@gmail.com">ganeshlaxmankotwade@gmail.com</a>
-                    </li>
-                    <li>
-                        <strong>Phone:</strong>
-                        <a href="tel:+919373842949">+91 9373842949</a>
-                    </li>
+                <h3>Farm Fresh</h3>
+                <p>Connecting farmers directly with consumers for the freshest organic produce.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h3>Follow Us</h3>
-                <div class="social-links">
-                    <a href="#">Facebook</a>
-                    <a href="#">Instagram</a>
-                    <a href="#">Twitter</a>
-                </div>
+                <h3>Contact Us</h3>
+                <ul class="contact-info">
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:ganeshlaxmankotwade@gmail.com">ganeshlaxmankotwade@gmail.com</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+919373842949">+91 9373842949</a>
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="footer-bottom">
@@ -100,12 +323,10 @@
         function redirectToDashboard() {
             const user = JSON.parse(localStorage.getItem('user'));
             if (!user) {
-                // If not logged in, redirect to login page
                 window.location.href = 'login.html';
                 return;
             }
             
-            // Redirect based on user type
             if (user.user_type === 'admin') {
                 window.location.href = 'admin-dashboard.html';
             } else if (user.user_type === 'farmer') {
@@ -113,7 +334,6 @@
             } else if (user.user_type === 'customer') {
                 window.location.href = 'customer-dashboard.html';
             } else {
-                // Default fallback
                 window.location.href = 'admin-dashboard.html';
             }
         }
@@ -126,6 +346,9 @@
             
             // Load cart items
             loadCartItems();
+            
+            // Update navigation links
+            updateNavLinks();
         });
         
         // Load cart items
@@ -137,10 +360,12 @@
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = '';
                 emptyCartMessage.classList.remove('hidden');
+                document.querySelector('.cart-container').classList.add('hidden');
                 return;
             }
             
             emptyCartMessage.classList.add('hidden');
+            document.querySelector('.cart-container').classList.remove('hidden');
             
             // Calculate totals
             let subtotal = 0;
@@ -160,12 +385,12 @@
                             <p class="item-price">${item.price}</p>
                         </div>
                         <div class="item-quantity">
-                            <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                            <button onclick="updateQuantity('${String(item.id)}', ${item.quantity - 1})">-</button>
                             <span>${item.quantity}</span>
-                            <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                            <button onclick="updateQuantity('${String(item.id)}', ${item.quantity + 1})">+</button>
                         </div>
                         <div class="item-total">₹${itemTotal.toFixed(2)}</div>
-                        <button class="remove-item" onclick="removeItem(${item.id})">×</button>
+                        <button class="remove-item" onclick="removeItem('${String(item.id)}')">×</button>
                     </div>
                 `;
             }).join('');
@@ -193,18 +418,30 @@
                 // Update UI
                 loadCartItems();
                 updateCartCount();
+                
+                // Show notification
+                showNotification('Cart updated', 'success');
             }
         }
         
         // Remove item from cart
         function removeItem(itemId) {
+            console.log('Removing item:', itemId); // Debug log
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const updatedCart = cart.filter(item => item.id !== itemId);
+            console.log('Current cart:', cart); // Debug log
+            
+            // Convert itemId to string for comparison
+            const updatedCart = cart.filter(item => String(item.id) !== String(itemId));
+            console.log('Updated cart:', updatedCart); // Debug log
+            
             localStorage.setItem('cart', JSON.stringify(updatedCart));
             
             // Update UI
             loadCartItems();
             updateCartCount();
+            
+            // Show notification
+            showNotification('Item removed from cart', 'success');
         }
         
         // Update cart count
@@ -214,16 +451,91 @@
             document.querySelector('.cart-count').textContent = totalItems;
         }
         
+        // Update navigation links based on user login status
+        function updateNavLinks() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const loginLink = document.getElementById('login-link');
+            const dashboardLink = document.getElementById('dashboard-link');
+            
+            if (user) {
+                loginLink.style.display = 'none';
+                dashboardLink.style.display = 'block';
+            } else {
+                loginLink.style.display = 'block';
+                dashboardLink.style.display = 'none';
+            }
+        }
+        
         // Checkout function
         function checkout() {
             const user = JSON.parse(localStorage.getItem('user'));
             if (!user) {
-                alert('Please login to checkout');
-                window.location.href = 'login.html';
+                showNotification('Please login to checkout', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
                 return;
             }
             
-            alert('Checkout functionality will be implemented soon!');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                showNotification('Your cart is empty', 'error');
+                return;
+            }
+            
+            showNotification('Processing your order...', 'success');
+            
+            // Create order object
+            const order = {
+                id: Date.now().toString(),
+                userId: user.id,
+                userEmail: user.email,
+                userName: user.full_name,
+                items: [...cart],
+                subtotal: cart.reduce((sum, item) => {
+                    const price = parseFloat(item.price.replace('₹', '').replace('/kg', '').replace('/L', ''));
+                    return sum + (price * item.quantity);
+                }, 0),
+                deliveryFee: 50,
+                total: cart.reduce((sum, item) => {
+                    const price = parseFloat(item.price.replace('₹', '').replace('/kg', '').replace('/L', ''));
+                    return sum + (price * item.quantity);
+                }, 0) + 50,
+                status: 'pending',
+                orderDate: new Date().toISOString(),
+                deliveryAddress: user.delivery_address || user.farm_location || '',
+                paymentMethod: 'Cash on Delivery'
+            };
+            
+            // Save order to localStorage
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            // Clear the cart
+            localStorage.removeItem('cart');
+            
+            // Update UI
+            loadCartItems();
+            updateCartCount();
+            
+            // Show success message and redirect
+            showNotification('Order placed successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'customer-dashboard.html';
+            }, 2000);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
     </script>
 </body>

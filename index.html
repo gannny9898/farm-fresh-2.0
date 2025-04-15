@@ -15,24 +15,44 @@
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="logo">
-            <h1><i class="fas fa-leaf"></i> Farm Fresh</h1>
+        <div class="navbar-container">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-leaf"></i>
+                    <span>Farm Fresh</span>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="farmers.html">Farmers</a></li>
+                <li><a href="#" id="dashboard-link" onclick="redirectToDashboard(); return false;">Dashboard</a></li>
+                <li>
+                    <a href="cart.html" class="cart-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="auth-links" style="display: flex;">
+                <a href="login.html" class="login-btn">Login</a>
+                <a href="register.html" class="register-btn">Register</a>
+            </div>
+            <!-- User profile section - hidden by default -->
+            <div class="user-profile" style="display: none !important;">
+                <img src="https://via.placeholder.com/40" alt="User Profile" class="profile-img">
+                <span class="user-name">John Doe</span>
+                <div class="dropdown-content">
+                    <a href="#" id="profile-link">Profile</a>
+                    <a href="#" id="logout-btn">Logout</a>
+                </div>
+            </div>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
         </div>
-        <div class="nav-links">
-            <a href="index.html" class="active">Home</a>
-            <a href="products.html">Products</a>
-            <a href="#" onclick="redirectToDashboard()">Dashboard</a>
-            <a href="login.html" class="login-link">Login</a>
-            <a href="cart.html" class="cart-link">
-                <span class="cart-icon"><i class="fas fa-shopping-cart"></i></span>
-                <span class="cart-count">0</span>
-            </a>
-        </div>
-        <button class="mobile-menu-btn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
     </nav>
 
     <!-- WebGL Hero Section -->
@@ -383,19 +403,15 @@
         // Update navigation links based on user login status
         function updateNavLinks() {
             const user = window.AccessControl.getCurrentUser();
-            const loginLink = document.querySelector('.login-link');
+            const loginLink = document.getElementById('login-link');
+            const dashboardLink = document.getElementById('dashboard-link');
             
             if (user) {
-                loginLink.textContent = 'Account';
-                loginLink.href = '#';
-                loginLink.onclick = function() {
-                    redirectToDashboard();
-                    return false;
-                };
+                loginLink.style.display = 'none';
+                dashboardLink.style.display = 'block';
             } else {
-                loginLink.textContent = 'Login';
-                loginLink.href = 'login.html';
-                loginLink.onclick = null;
+                loginLink.style.display = 'block';
+                dashboardLink.style.display = 'none';
             }
         }
 
@@ -501,6 +517,36 @@
                 footer.appendChild(dataButton);
             }
         });
+
+        // Add to products.js
+        function displayProducts(products) {
+            const productsContainer = document.getElementById('products-container');
+            
+            if (!products || products.length === 0) {
+                productsContainer.innerHTML = `
+                    <div class="no-products">
+                        <i class="fas fa-box-open" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                        <p>No products available at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Rest of the display logic...
+        }
+
+        // Add loading state handling
+        function showLoading() {
+            const productsContainer = document.getElementById('products-container');
+            productsContainer.innerHTML = '<div class="loading">Loading products...</div>';
+        }
+
+        function hideLoading() {
+            const loading = document.querySelector('.loading');
+            if (loading) {
+                loading.remove();
+            }
+        }
     </script>
 </body>
 </html> 

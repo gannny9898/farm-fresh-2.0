@@ -402,11 +402,20 @@ function getCurrentUser() {
     return userData ? JSON.parse(userData) : null;
 }
 
-// Logout function
+// Function to handle logout
 function logout() {
-    localStorage.removeItem('token');
+    // Clear user data from localStorage
     localStorage.removeItem('user');
-    showNotification('You have been logged out', 'success');
+    
+    // If using AccessControl, clear the user session
+    if (window.AccessControl) {
+        window.AccessControl.logout();
+    }
+    
+    // Show logout notification
+    showNotification('Logged out successfully', 'success');
+    
+    // Redirect to home page
     window.location.href = 'index.html';
 }
 
@@ -1301,4 +1310,15 @@ function animateAddToCart(button, productCard) {
 // Initialize cart count on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
+});
+
+// Add event listener for logout button
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+    }
 }); 

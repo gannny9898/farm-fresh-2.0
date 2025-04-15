@@ -268,4 +268,57 @@
     .farmer-categories {
         justify-content: center;
     }
+}
+
+.login-prompt {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-prompt h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.login-prompt p {
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.auth-buttons .login-btn,
+.auth-buttons .register-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.auth-buttons .login-btn {
+    background: #2ecc71;
+    color: white;
+}
+
+.auth-buttons .register-btn {
+    background: #3498db;
+    color: white;
+}
+
+.auth-buttons .login-btn:hover {
+    background: #27ae60;
+}
+
+.auth-buttons .register-btn:hover {
+    background: #2980b9;
 } 

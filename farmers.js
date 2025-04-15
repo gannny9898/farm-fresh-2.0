@@ -15,12 +15,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update cart count
     updateCartCount();
+    
+    // Update navigation based on login status
+    updateNavigation();
 });
 
 /**
  * Load farmers from localStorage
  */
 function loadFarmers() {
+    if (!isLoggedIn()) {
+        const farmersContainer = document.getElementById('farmers-container');
+        if (farmersContainer) {
+            farmersContainer.innerHTML = `
+                <div class="login-prompt">
+                    <h2>Please Login to View Farmers</h2>
+                    <p>To access our farmers' directory and make purchases, please login or create an account.</p>
+                    <div class="auth-buttons">
+                        <a href="login.html" class="login-btn">Login</a>
+                        <a href="register.html" class="register-btn">Register</a>
+                    </div>
+                </div>
+            `;
+        }
+        return;
+    }
+    
     const farmersContainer = document.getElementById('farmers-container');
     if (!farmersContainer) return;
     
@@ -293,4 +313,81 @@ function updateCartCount() {
     if (cartCountElement) {
         cartCountElement.textContent = totalItems;
     }
+}
+
+// Function to redirect to appropriate dashboard based on user type
+function redirectToDashboard() {
+    const user = window.AccessControl ? window.AccessControl.getCurrentUser() : JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+        // If not logged in, redirect to login page
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Redirect based on user type
+    if (user.user_type === 'admin') {
+        window.location.href = 'admin-dashboard.html';
+    } else if (user.user_type === 'farmer') {
+        window.location.href = 'farmer-dashboard.html';
+    } else {
+        window.location.href = 'customer-dashboard.html';
+    }
+}
+
+// Function to update navigation based on login status
+function updateNavigation() {
+    const user = window.AccessControl ? window.AccessControl.getCurrentUser() : JSON.parse(localStorage.getItem('user'));
+    const authLinks = document.querySelector('.auth-links');
+    const userProfile = document.querySelector('.user-profile');
+    const dashboardLink = document.querySelector('#dashboard-link');
+    const cartLink = document.querySelector('.cart-link');
+    
+    if (user) {
+        // User is logged in
+        if (authLinks) authLinks.style.display = 'none';
+        if (userProfile) {
+            userProfile.style.display = 'flex';
+            // Update user name and profile image if available
+            const userNameElement = userProfile.querySelector('.user-name');
+            if (userNameElement) {
+                userNameElement.textContent = user.full_name || user.username || 'User';
+            }
+            const profileImg = userProfile.querySelector('.profile-img');
+            if (profileImg && user.profile_image) {
+                profileImg.src = user.profile_image;
+            }
+        }
+        if (dashboardLink) {
+            dashboardLink.style.display = 'block';
+        }
+        if (cartLink) {
+            cartLink.style.display = 'block';
+        }
+    } else {
+        // User is not logged in
+        if (authLinks) authLinks.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+        if (dashboardLink) {
+            dashboardLink.style.display = 'none';
+        }
+        if (cartLink) {
+            cartLink.style.display = 'none';
+        }
+    }
+}
+
+// Function to check if user is logged in
+function isLoggedIn() {
+    const user = window.AccessControl ? window.AccessControl.getCurrentUser() : JSON.parse(localStorage.getItem('user'));
+    return !!user;
+}
+
+// Function to handle protected actions
+function handleProtectedAction(action) {
+    if (!isLoggedIn()) {
+        showNotification('Please login or register to access this feature', 'warning');
+        window.location.href = 'login.html';
+        return false;
+    }
+    return true;
 } 

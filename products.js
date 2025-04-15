@@ -314,8 +314,14 @@ function redirectToDashboard() {
         return;
     }
     
-    // All users now go to the same dashboard page
-    window.location.href = 'admin-dashboard.html';
+    // Redirect based on user type
+    if (user.user_type === 'admin') {
+        window.location.href = 'admin-dashboard.html';
+    } else if (user.user_type === 'farmer') {
+        window.location.href = 'farmer-dashboard.html';
+    } else {
+        window.location.href = 'customer-dashboard.html';
+    }
 }
 
 // Function to update navigation based on login status
