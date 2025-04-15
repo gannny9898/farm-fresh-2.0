@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update cart count
     updateCartCount();
+
+    // Update navigation based on login status
+    updateNavigation();
 });
 
 /**
@@ -48,16 +51,13 @@ function loadProducts() {
     if (searchQuery) {
         const query = searchQuery.toLowerCase();
         filteredProducts = filteredProducts.filter(product => 
-            product.name.toLowerCase().includes(query) || 
+            product.name.toLowerCase().includes(query) ||
             product.description.toLowerCase().includes(query)
         );
     }
     
     // Sort products
-    sortProducts(filteredProducts, sortBy);
-    
-    // Update filter form with current values
-    updateFilterForm(categoryFilter, searchQuery, sortBy);
+    filteredProducts = sortProducts(filteredProducts, sortBy);
     
     // Display products
     displayProducts(filteredProducts);
@@ -208,6 +208,7 @@ function sortProducts(products, sortBy) {
         default:
             products.sort((a, b) => a.name.localeCompare(b.name));
     }
+    return products;
 }
 
 /**
@@ -229,49 +230,40 @@ function getCategoryName(categoryId) {
  * Add product to cart
  */
 function addToCart(productId) {
-    // Get products from localStorage
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+        showNotification('Please login to add items to cart', 'warning');
+        window.location.href = 'login.html';
+        return;
+    }
+
     const products = JSON.parse(localStorage.getItem('products')) || [];
-    const product = products.find(p => p.id == productId);
+    const product = products.find(p => p.id === productId);
     
     if (!product) {
         showNotification('Product not found', 'error');
         return;
     }
     
-    // Get registered users to find farmer name
-    const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
-    const farmer = users.find(user => user.id == product.farmer_id);
-    const farmerName = farmer ? farmer.full_name : 'Unknown Farmer';
-    
-    // Get cart from localStorage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(item => item.id === productId);
     
-    // Check if product is already in cart
-    const existingItemIndex = cart.findIndex(item => item.id == productId);
-    
-    if (existingItemIndex !== -1) {
-        // Update quantity
-        cart[existingItemIndex].quantity += 1;
+    if (existingItem) {
+        existingItem.quantity += 1;
     } else {
-        // Add new item
         cart.push({
             id: product.id,
             name: product.name,
-            price: `₹${product.price}`,
+            price: product.price,
             image: product.image,
-            farmer: farmerName,
+            farmer: product.farmer,
             quantity: 1
         });
     }
     
-    // Save cart to localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
-    
-    // Show notification
-    showNotification('Product added to cart!', 'success');
-    
-    // Update cart count
     updateCartCount();
+    showNotification('Product added to cart', 'success');
 }
 
 /**
@@ -324,4 +316,15 @@ function redirectToDashboard() {
     
     // All users now go to the same dashboard page
     window.location.href = 'admin-dashboard.html';
+}
+
+// Function to update navigation based on login status
+function updateNavigation() {
+    // Implementation of updateNavigation function
+}
+
+// Function to check if user is logged in
+function isLoggedIn() {
+    // Implementation of isLoggedIn function
+    return false; // Placeholder return, actual implementation needed
 } 

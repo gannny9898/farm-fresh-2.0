@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Registration</h1>
+    
+    <div class="form-container">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" value="test@example.com">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" value="password123">
+        </div>
+        <div class="form-group">
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" value="Test User">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" value="1234567890">
+        </div>
+        <div class="form-group">
+            <label for="user_type">User Type</label>
+            <select id="user_type" onchange="toggleFields()">
+                <option value="customer">Customer</option>
+                <option value="farmer">Farmer</option>
+            </select>
+        </div>
+        
+        <!-- Customer fields -->
+        <div id="customer-fields">
+            <div class="form-group">
+                <label for="delivery_address">Delivery Address</label>
+                <textarea id="delivery_address">123 Test Street</textarea>
+            </div>
+        </div>
+        
+        <!-- Farmer fields -->
+        <div id="farmer-fields" style="display: none;">
+            <div class="form-group">
+                <label for="farm_name">Farm Name</label>
+                <input type="text" id="farm_name" value="Test Farm">
+            </div>
+            <div class="form-group">
+                <label for="farm_location">Farm Location</label>
+                <input type="text" id="farm_location" value="Test Location">
+            </div>
+            <div class="form-group">
+                <label>Product Categories</label>
+                <div>
+                    <input type="checkbox" id="category1" value="1"> <label for="category1" style="display: inline;">Vegetables</label><br>
+                    <input type="checkbox" id="category2" value="2"> <label for="category2" style="display: inline;">Fruits</label><br>
+                    <input type="checkbox" id="category3" value="3"> <label for="category3" style="display: inline;">Dairy</label>
+                </div>
+            </div>
+        </div>
+        
+        <button id="simulate-success">Simulate Success</button>
+        <button id="simulate-error">Simulate Error</button>
+    </div>
+    
+    <div class="success-message" id="success-message">
+        Registration successful! You can now login with your email and password.
+    </div>
+    
+    <div class="response">
+        <h2>Response:</h2>
+        <pre id="response-data">Click a button to simulate a response</pre>
+    </div>
+    
+    <script>
+        function toggleFields() {
+            const userType = document.getElementById('user_type').value;
+            if (userType === 'farmer') {
+                document.getElementById('farmer-fields').style.display = 'block';
+                document.getElementById('customer-fields').style.display = 'none';
+            } else {
+                document.getElementById('farmer-fields').style.display = 'none';
+                document.getElementById('customer-fields').style.display = 'block';
+            }
+        }
+        
+        document.getElementById('simulate-success').addEventListener('click', function() {
+            const userType = document.getElementById('user_type').value;
+            let requestData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                full_name: document.getElementById('full_name').value,
+                phone: document.getElementById('phone').value,
+                user_type: userType
+            };
+            
+            if (userType === 'customer') {
+                requestData.delivery_address = document.getElementById('delivery_address').value;
+            } else {
+                requestData.farm_name = document.getElementById('farm_name').value;
+                requestData.farm_location = document.getElementById('farm_location').value;
+                
+                // Get selected categories
+                const categories = [];
+                if (document.getElementById('category1').checked) categories.push(1);
+                if (document.getElementById('category2').checked) categories.push(2);
+                if (document.getElementById('category3').checked) categories.push(3);
+                requestData.product_categories = categories;
+            }
+            
+            // Simulate successful response
+            const successResponse = {
+                status: 'success',
+                message: 'Registration successful! You can now login with your email and password.',
+                user_id: Math.floor(1000 + Math.random() * 9000)
+            };
+            
+            document.getElementById('response-data').textContent = JSON.stringify({
+                request: requestData,
+                response: successResponse
+            }, null, 2);
+            
+            // Show success message
+            document.getElementById('success-message').style.display = 'block';
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                document.getElementById('success-message').style.display = 'none';
+            }, 3000);
+        });
+        
+        document.getElementById('simulate-error').addEventListener('click', function() {
+            const userType = document.getElementById('user_type').value;
+            let requestData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                full_name: document.getElementById('full_name').value,
+                phone: document.getElementById('phone').value,
+                user_type: userType
+            };
+            
+            if (userType === 'customer') {
+                requestData.delivery_address = document.getElementById('delivery_address').value;
+            } else {
+                requestData.farm_name = document.getElementById('farm_name').value;
+                requestData.farm_location = document.getElementById('farm_location').value;
+                
+                // Get selected categories
+                const categories = [];
+                if (document.getElementById('category1').checked) categories.push(1);
+                if (document.getElementById('category2').checked) categories.push(2);
+                if (document.getElementById('category3').checked) categories.push(3);
+                requestData.product_categories = categories;
+            }
+            
+            // Simulate error response
+            const errorResponse = {
+                status: 'error',
+                message: 'Email already exists. Please use a different email address.'
+            };
+            
+            document.getElementById('response-data').textContent = JSON.stringify({
+                request: requestData,
+                response: errorResponse
+            }, null, 2);
+        });
+    </script>
+</body>
+</html> 

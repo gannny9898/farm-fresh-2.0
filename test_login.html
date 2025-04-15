@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Login API</h1>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" value="customer@example.com">
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" value="password123">
+    </div>
+    <button id="login-btn">Login</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('login-btn').addEventListener('click', async function() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = 'Sending login request...';
+            
+            try {
+                const response = await fetch('api/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                resultDiv.innerHTML += `\nResponse status: ${response.status}`;
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    resultDiv.innerHTML += `\nNon-JSON response received: ${text}`;
+                    throw new Error('Server returned non-JSON response');
+                }
+                
+                const result = await response.json();
+                resultDiv.innerHTML += `\nResponse data: ${JSON.stringify(result, null, 2)}`;
+                
+                if (response.ok) {
+                    resultDiv.innerHTML += '\nLogin successful!';
+                } else {
+                    resultDiv.innerHTML += `\nLogin failed: ${result.message}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML += `\nError: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html> 
