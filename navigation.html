@@ -19,16 +19,20 @@
                 </a>
             </li>
         </ul>
-        <div class="auth-links">
-            <a href="login.html" class="login-btn">Login</a>
-            <a href="register.html" class="register-btn">Register</a>
-        </div>
-        <div class="user-profile" style="display: none;">
-            <img src="https://via.placeholder.com/40" alt="User Profile" class="profile-img">
-            <span class="user-name">John Doe</span>
-            <div class="dropdown-content">
-                <a href="#" id="profile-link">Profile</a>
-                <a href="#" id="logout-btn">Logout</a>
+        <div class="nav-links">
+            <!-- Auth Links (shown when logged out) -->
+            <div class="auth-links">
+                <a href="/login.html" class="login-btn">Login</a>
+                <a href="/register.html" class="register-btn">Register</a>
+            </div>
+            
+            <!-- User Profile (shown when logged in) -->
+            <div class="user-profile hidden">
+                <span class="username"></span>
+                <div class="dropdown-content">
+                    <a href="#" id="profile-link">Profile</a>
+                    <a href="#" id="logout-btn">Logout</a>
+                </div>
             </div>
         </div>
         <div class="hamburger">

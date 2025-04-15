@@ -1,3 +1,44 @@
+// Add this at the beginning of your script.js
+document.addEventListener('DOMContentLoaded', function() {
+    checkLoginState();
+});
+
+function checkLoginState() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const authLinks = document.querySelector('.auth-links');
+    const userProfile = document.querySelector('.user-profile');
+    
+    if (user) {
+        // User is logged in
+        if (authLinks) authLinks.style.display = 'none';
+        if (userProfile) {
+            userProfile.style.display = 'flex';
+            // Update username if there's a span for it
+            const usernameSpan = userProfile.querySelector('.username');
+            if (usernameSpan) {
+                usernameSpan.textContent = user.name || user.email;
+            }
+        }
+    } else {
+        // User is not logged in
+        if (authLinks) authLinks.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+    }
+}
+
+// Update your login success handler
+async function handleLoginSuccess(userData) {
+    localStorage.setItem('user', JSON.stringify(userData));
+    checkLoginState();
+}
+
+// Update your logout function
+function logout() {
+    localStorage.removeItem('user');
+    checkLoginState();
+    window.location.href = 'index.html';
+}
+
 // Handle login/register form switching
 function showForm(formType) {
     const loginForm = document.getElementById('login-form');
@@ -107,26 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     debugContent.textContent += `Response data: ${JSON.stringify(result, null, 2)}\n`;
                 }
                 
-                if (response.ok) {
-                    // Save user data and token to localStorage
-                    localStorage.setItem('user', JSON.stringify(result.user));
-                    localStorage.setItem('token', result.token);
-                    
-                    // Show success message
-                    showNotification('Login successful! Redirecting...', 'success');
-                    
-                    if (debugContent) {
-                        debugContent.textContent += 'Login successful! Redirecting...\n';
+                if (result.success) {
+                    handleLoginSuccess(result.user);
+                    // Redirect if needed
+                    if (result.user.role === 'customer') {
+                        window.location.href = 'index.html';
                     }
-                    
-                    // Redirect to appropriate page based on user type
-                    setTimeout(() => {
-                        if (result.user.user_type === 'farmer') {
-                            window.location.href = 'farmer-dashboard.html';
-                        } else {
-                            window.location.href = 'index.html';
-                        }
-                    }, 1500);
                 } else {
                     throw new Error(result.message || 'Login failed');
                 }
@@ -404,19 +431,24 @@ function getCurrentUser() {
 
 // Function to handle logout
 function logout() {
-    // Clear user data from localStorage
+    // Clear user data
     localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     
-    // If using AccessControl, clear the user session
-    if (window.AccessControl) {
-        window.AccessControl.logout();
+    // Hide user profile
+    const userProfile = document.querySelector('.user-profile');
+    if (userProfile) {
+        userProfile.classList.add('hidden');
     }
     
-    // Show logout notification
-    showNotification('Logged out successfully', 'success');
+    // Show login/register buttons
+    const authLinks = document.querySelector('.auth-links');
+    if (authLinks) {
+        authLinks.classList.remove('hidden');
+    }
     
     // Redirect to home page
-    window.location.href = 'index.html';
+    window.location.href = '/index.html';
 }
 
 // Update navigation based on login status
@@ -1320,5 +1352,37 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             logout();
         });
+    }
+});
+
+// After successful login
+function handleSuccessfulLogin(userData) {
+    // Show user profile
+    const userProfile = document.querySelector('.user-profile');
+    if (userProfile) {
+        userProfile.classList.remove('hidden');
+        
+        // Update profile link if it exists
+        const profileLink = document.getElementById('profile-link');
+        if (profileLink) {
+            profileLink.href = `/profile.html?id=${userData.id}`;
+        }
+    }
+    
+    // Hide login/register buttons
+    const authLinks = document.querySelector('.auth-links');
+    if (authLinks) {
+        authLinks.classList.add('hidden');
+    }
+    
+    // Store user data
+    localStorage.setItem('user', JSON.stringify(userData));
+}
+
+// Check login state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+        handleSuccessfulLogin(JSON.parse(userData));
     }
 }); 

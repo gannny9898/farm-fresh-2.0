@@ -207,14 +207,15 @@ body {
 
 /* User Profile Section */
 .user-profile {
-    display: none; /* Hidden by default */
+    display: flex;
     align-items: center;
+    gap: 10px;
     position: relative;
-    margin-left: 20px;
+    cursor: pointer;
 }
 
-.user-profile.show {
-    display: flex; /* Only show when logged in */
+.user-profile.hidden {
+    display: none;
 }
 
 .profile-img {
@@ -2773,4 +2774,10 @@ a[href^="#"] {
 
 .nav-links.active a:nth-child(5) {
     animation-delay: 0.4s;
+}
+
+.username {
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #f5f5f5;
 } 
