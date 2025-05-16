@@ -9,329 +9,630 @@
     <title>Farm Fresh - Fresh Products Direct from Farmers</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="public/css/products.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link rel="stylesheet" href="styles.css?v=1.1">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#4CAF50',
+                            light: '#6ABF6E',
+                            dark: '#45a049',
+                        },
+                        secondary: {
+                            DEFAULT: '#2c3e50',
+                            light: '#3d5366',
+                            dark: '#1a2530',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-in-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-out': 'slideOut 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideOut: {
+                            '0%': { transform: 'translateX(0)', opacity: '1' },
+                            '100%': { transform: 'translateX(100%)', opacity: '0' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="public/css/navbar.css">
+    <style>
+        /* Custom animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        .hero-overlay {
+            background: linear-gradient(to right, rgba(44, 62, 80, 0.7), rgba(76, 175, 80, 0.5));
+            mix-blend-mode: multiply;
+        }
+        
+        /* Notification styles */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        .notification {
+            display: none;
+            z-index: 9999;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="logo">
-                <a href="index.html">
-                    <i class="fas fa-leaf"></i>
-                    <span>Farm Fresh</span>
-                </a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="farmers.html">Farmers</a></li>
-                <li><a href="#" id="dashboard-link" onclick="redirectToDashboard(); return false;">Dashboard</a></li>
-                <li>
-                    <a href="cart.html" class="cart-link">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="auth-links" style="display: flex;">
-                <a href="login.html" class="login-btn">Login</a>
-                <a href="register.html" class="register-btn">Register</a>
-            </div>
-            <!-- User profile section - hidden by default -->
-            <div class="user-profile" style="display: none !important;">
-                <img src="https://via.placeholder.com/40" alt="User Profile" class="profile-img">
-                <span class="user-name">John Doe</span>
-                <div class="dropdown-content">
-                    <a href="#" id="profile-link">Profile</a>
-                    <a href="#" id="logout-btn">Logout</a>
-                </div>
-            </div>
-            <div class="hamburger">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
-        </div>
-    </nav>
+    <!-- Include navbar template -->
+    <div id="navbar-container"></div>
 
     <!-- WebGL Hero Section -->
-    <section class="hero" id="hero-canvas-container">
-        <canvas id="hero-canvas" class="hero-canvas"></canvas>
-        <div class="hero-content" data-aos="fade-up" data-aos-delay="200">
-            <h1>Fresh from Farm to Table</h1>
-            <p>Get fresh, organic produce directly from local farmers</p>
-            <a href="products.html" class="cta-button">Shop Now <i class="fas fa-arrow-right"></i></a>
+    <section class="relative h-[calc(100vh-64px)] min-h-[600px] w-full flex items-center justify-center overflow-hidden" id="hero-canvas-container">
+        <canvas id="hero-canvas" class="absolute inset-0 w-full h-full -z-10"></canvas>
+        <div class="hero-overlay absolute inset-0 -z-10"></div>
+        <div class="text-center max-w-4xl px-4 sm:px-6 z-10" data-aos="fade-up" data-aos-delay="200">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">Fresh from Farm to Table</h1>
+            <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">Get fresh, organic produce directly from local farmers</p>
+            <a href="products.html" class="inline-flex items-center px-8 py-4 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+                Shop Now
+                <i class="fas fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
+            </a>
         </div>
-        <div class="hero-stats">
-            <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
-                <span class="stat-number">100+</span>
-                <span class="stat-text">Farmers</span>
+        <div class="absolute bottom-10 left-0 right-0 flex justify-center gap-6 md:gap-12 px-4">
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-4 text-center transform transition-transform hover:scale-105 hover:bg-white/20" data-aos="fade-up" data-aos-delay="400">
+                <span class="block text-3xl font-bold text-white mb-1">100+</span>
+                <span class="text-white/80 text-sm">Farmers</span>
             </div>
-            <div class="stat-item" data-aos="fade-up" data-aos-delay="500">
-                <span class="stat-number">500+</span>
-                <span class="stat-text">Products</span>
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-4 text-center transform transition-transform hover:scale-105 hover:bg-white/20" data-aos="fade-up" data-aos-delay="500">
+                <span class="block text-3xl font-bold text-white mb-1">500+</span>
+                <span class="text-white/80 text-sm">Products</span>
             </div>
-            <div class="stat-item" data-aos="fade-up" data-aos-delay="600">
-                <span class="stat-number">10K+</span>
-                <span class="stat-text">Customers</span>
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-4 text-center transform transition-transform hover:scale-105 hover:bg-white/20" data-aos="fade-up" data-aos-delay="600">
+                <span class="block text-3xl font-bold text-white mb-1">10K+</span>
+                <span class="text-white/80 text-sm">Customers</span>
             </div>
         </div>
     </section>
 
     <!-- Search Section -->
-    <section class="search-container">
-        <div class="search-box">
-            <div class="search-input-container">
-                <input type="text" id="search-input" placeholder="Search for fresh products...">
-                <div class="search-suggestions" id="search-suggestions"></div>
+    <section class="py-8 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="flex flex-col md:flex-row gap-3 bg-white p-2 rounded-lg shadow-sm">
+                <div class="relative flex-grow">
+                    <input type="text" id="search-input" placeholder="Search for fresh products..." class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all duration-300">
+                    <div class="absolute left-0 right-0 top-full mt-1 bg-white rounded-lg shadow-lg z-10 hidden" id="search-suggestions"></div>
+                </div>
+                <button id="search-button" class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg transition-all duration-300 flex items-center justify-center whitespace-nowrap">
+                    <i class="fas fa-search mr-2"></i> Search
+                </button>
             </div>
-            <button id="search-button"><i class="fas fa-search"></i> Search</button>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features">
-        <h2 data-aos="fade-up">Why Choose Farm Fresh?</h2>
-        <div class="feature-grid">
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                <i class="fas fa-seedling feature-icon"></i>
-                <h3>100% Organic</h3>
-                <p>All our products are certified organic and naturally grown</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                <i class="fas fa-truck feature-icon"></i>
-                <h3>Fast Delivery</h3>
-                <p>Same day delivery to ensure maximum freshness</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                <i class="fas fa-tag feature-icon"></i>
-                <h3>Best Prices</h3>
-                <p>Direct from farmers means better prices for everyone</p>
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-secondary mb-12" data-aos="fade-up">Why Choose Farm Fresh?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
+                        <i class="fas fa-seedling text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">100% Organic</h3>
+                    <p class="text-gray-600">All our products are certified organic and naturally grown without harmful pesticides</p>
+                </div>
+                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
+                        <i class="fas fa-truck text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">Fast Delivery</h3>
+                    <p class="text-gray-600">Same day delivery to ensure maximum freshness from farm to your table</p>
+                </div>
+                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
+                        <i class="fas fa-tag text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">Best Prices</h3>
+                    <p class="text-gray-600">Direct from farmers means better prices for everyone and fair compensation</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Categories Section -->
-    <section class="categories-section">
-        <h2 data-aos="fade-up">Browse by Category</h2>
-        <div class="categories-grid">
-            <div class="category-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="category-icon"><i class="fas fa-carrot"></i></div>
-                <h3>Vegetables</h3>
-                <a href="products.html?category=vegetables" class="category-link">View All</a>
-            </div>
-            <div class="category-card" data-aos="fade-up" data-aos-delay="150">
-                <div class="category-icon"><i class="fas fa-apple-alt"></i></div>
-                <h3>Fruits</h3>
-                <a href="products.html?category=fruits" class="category-link">View All</a>
-            </div>
-            <div class="category-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="category-icon"><i class="fas fa-egg"></i></div>
-                <h3>Dairy</h3>
-                <a href="products.html?category=dairy" class="category-link">View All</a>
-            </div>
-            <div class="category-card" data-aos="fade-up" data-aos-delay="250">
-                <div class="category-icon"><i class="fas fa-bread-slice"></i></div>
-                <h3>Bakery</h3>
-                <a href="products.html?category=bakery" class="category-link">View All</a>
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-secondary mb-12" data-aos="fade-up">Browse by Category</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="p-6 flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                            <i class="fas fa-carrot text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3 text-secondary">Vegetables</h3>
+                        <a href="products.html?category=vegetables" class="text-primary hover:text-primary-dark font-medium inline-flex items-center transition-all duration-300">
+                            View All
+                            <i class="fas fa-arrow-right ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group" data-aos="fade-up" data-aos-delay="150">
+                    <div class="p-6 flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                            <i class="fas fa-apple-alt text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3 text-secondary">Fruits</h3>
+                        <a href="products.html?category=fruits" class="text-primary hover:text-primary-dark font-medium inline-flex items-center transition-all duration-300">
+                            View All
+                            <i class="fas fa-arrow-right ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-6 flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                            <i class="fas fa-egg text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3 text-secondary">Dairy</h3>
+                        <a href="products.html?category=dairy" class="text-primary hover:text-primary-dark font-medium inline-flex items-center transition-all duration-300">
+                            View All
+                            <i class="fas fa-arrow-right ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group" data-aos="fade-up" data-aos-delay="250">
+                    <div class="p-6 flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                            <i class="fas fa-bread-slice text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3 text-secondary">Bakery</h3>
+                        <a href="products.html?category=bakery" class="text-primary hover:text-primary-dark font-medium inline-flex items-center transition-all duration-300">
+                            View All
+                            <i class="fas fa-arrow-right ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Featured Products Section -->
-    <section class="featured-products">
-        <h2 data-aos="fade-up">Featured Products</h2>
-        <div class="products-grid">
-            <div class="product-card" data-category="vegetables" data-product-id="veg1" data-aos="fade-up" data-aos-delay="100">
-                <div class="product-badge">Fresh</div>
-                <img src="https://images.unsplash.com/photo-1518843875459-f738682238a6" alt="Fresh Vegetables">
-                <h3>Organic Vegetables Bundle</h3>
-                <div class="farmer"><i class="fas fa-user-circle"></i> By: Green Acres Farm</div>
-                <div class="price">₹299.00</div>
-                <button class="add-to-cart" onclick="addToCart('veg1', 'Organic Vegetables Bundle', '₹299.00', 'https://images.unsplash.com/photo-1518843875459-f738682238a6', 'Green Acres Farm')">Add to Cart</button>
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full mb-3">FRESH PICKS</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 section-title">Featured Products</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-5"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">Discover our handpicked selection of fresh, organic products directly from local farmers</p>
             </div>
-            <div class="product-card" data-category="fruits" data-product-id="fruit1" data-aos="fade-up" data-aos-delay="150">
-                <div class="product-badge">Seasonal</div>
-                <img src="https://images.unsplash.com/photo-1519996529931-28324d5a630e" alt="Fresh Fruits">
-                <h3>Seasonal Fruits Pack</h3>
-                <div class="farmer"><i class="fas fa-user-circle"></i> By: Sunshine Orchards</div>
-                <div class="price">₹399.00</div>
-                <button class="add-to-cart" onclick="addToCart('fruit1', 'Seasonal Fruits Pack', '₹399.00', 'https://images.unsplash.com/photo-1519996529931-28324d5a630e', 'Sunshine Orchards')">Add to Cart</button>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 product-grid">
+                <!-- Product Card 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 product-card" 
+                     data-category="vegetables" data-product-id="veg1">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Vegetables" 
+                             alt="Fresh Vegetables" 
+                             class="w-full h-52 object-cover">
+                        <div class="absolute top-3 left-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                            Fresh
+                        </div>
+                        <button class="absolute top-3 right-3 bg-white/80 text-gray-500 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                onclick="addToWishlist('veg1')" aria-label="Add to wishlist">
+                            <i class="fas fa-heart text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center text-amber-400 text-xs mb-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="text-gray-500 ml-1">4.5</span>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2 text-gray-800">Organic Vegetables Bundle</h3>
+                        <div class="flex items-center mb-3">
+                            <img src="https://via.placeholder.com/50/4CAF50/FFFFFF?text=F" alt="Farmer" class="w-5 h-5 rounded-full mr-1 border border-green-200">
+                            <span class="text-xs text-gray-500">Green Acres Farm</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-lg font-bold text-primary">₹299.00</div>
+                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">In Stock</span>
+                        </div>
+                        <button class="w-full bg-primary hover:bg-primary-dark text-white py-2.5 rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-300 hover:shadow" 
+                                onclick="addToCart('veg1', 'Organic Vegetables Bundle', '₹299.00', 'https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Vegetables', 'Green Acres Farm')">
+                            <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product Card 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 product-card" 
+                     data-category="fruits" data-product-id="fruit1">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/400x300/FF9800/FFFFFF?text=Fruits" 
+                             alt="Fresh Fruits" 
+                             class="w-full h-52 object-cover">
+                        <div class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                            Seasonal
+                        </div>
+                        <button class="absolute top-3 right-3 bg-white/80 text-gray-500 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                onclick="addToWishlist('fruit1')" aria-label="Add to wishlist">
+                            <i class="fas fa-heart text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center text-amber-400 text-xs mb-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="text-gray-500 ml-1">5.0</span>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2 text-gray-800">Seasonal Fruits Pack</h3>
+                        <div class="flex items-center mb-3">
+                            <img src="https://via.placeholder.com/50/FF9800/FFFFFF?text=F" alt="Farmer" class="w-5 h-5 rounded-full mr-1 border border-orange-200">
+                            <span class="text-xs text-gray-500">Sunshine Orchards</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-lg font-bold text-primary">₹399.00</div>
+                            <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">Bestseller</span>
+                        </div>
+                        <button class="w-full bg-primary hover:bg-primary-dark text-white py-2.5 rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-300 hover:shadow" 
+                                onclick="addToCart('fruit1', 'Seasonal Fruits Pack', '₹399.00', 'https://via.placeholder.com/400x300/FF9800/FFFFFF?text=Fruits', 'Sunshine Orchards')">
+                            <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product Card 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 product-card" 
+                     data-category="dairy" data-product-id="dairy1">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/400x300/2196F3/FFFFFF?text=Milk" 
+                             alt="Fresh Milk" 
+                             class="w-full h-52 object-cover">
+                        <div class="absolute top-3 left-3 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                            Organic
+                        </div>
+                        <button class="absolute top-3 right-3 bg-white/80 text-gray-500 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                onclick="addToWishlist('dairy1')" aria-label="Add to wishlist">
+                            <i class="fas fa-heart text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center text-amber-400 text-xs mb-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span class="text-gray-500 ml-1">4.0</span>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2 text-gray-800">Organic Milk</h3>
+                        <div class="flex items-center mb-3">
+                            <img src="https://via.placeholder.com/50/2196F3/FFFFFF?text=F" alt="Farmer" class="w-5 h-5 rounded-full mr-1 border border-blue-200">
+                            <span class="text-xs text-gray-500">Happy Cow Dairy</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-lg font-bold text-primary">₹89.00</div>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Fresh Daily</span>
+                        </div>
+                        <button class="w-full bg-primary hover:bg-primary-dark text-white py-2.5 rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-300 hover:shadow" 
+                                onclick="addToCart('dairy1', 'Organic Milk', '₹89.00', 'https://via.placeholder.com/400x300/2196F3/FFFFFF?text=Milk', 'Happy Cow Dairy')">
+                            <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product Card 4 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 product-card" 
+                     data-category="bakery" data-product-id="bakery1">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/400x300/FFC107/FFFFFF?text=Bread" 
+                             alt="Artisan Bread" 
+                             class="w-full h-52 object-cover">
+                        <div class="absolute top-3 left-3 bg-amber-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                            Artisan
+                        </div>
+                        <button class="absolute top-3 right-3 bg-white/80 text-gray-500 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                onclick="addToWishlist('bakery1')" aria-label="Add to wishlist">
+                            <i class="fas fa-heart text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center text-amber-400 text-xs mb-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="text-gray-500 ml-1">4.7</span>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2 text-gray-800">Artisan Sourdough Bread</h3>
+                        <div class="flex items-center mb-3">
+                            <img src="https://via.placeholder.com/50/FFC107/FFFFFF?text=F" alt="Farmer" class="w-5 h-5 rounded-full mr-1 border border-amber-200">
+                            <span class="text-xs text-gray-500">Sunrise Bakery</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-lg font-bold text-primary">₹149.00</div>
+                            <span class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full">Handmade</span>
+                        </div>
+                        <button class="w-full bg-primary hover:bg-primary-dark text-white py-2.5 rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-300 hover:shadow" 
+                                onclick="addToCart('bakery1', 'Artisan Sourdough Bread', '₹149.00', 'https://via.placeholder.com/400x300/FFC107/FFFFFF?text=Bread', 'Sunrise Bakery')">
+                            <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="product-card" data-category="dairy" data-product-id="dairy1" data-aos="fade-up" data-aos-delay="200">
-                <div class="product-badge">Organic</div>
-                <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150" alt="Fresh Milk">
-                <h3>Organic Milk</h3>
-                <div class="farmer"><i class="fas fa-user-circle"></i> By: Happy Cow Dairy</div>
-                <div class="price">₹89.00</div>
-                <button class="add-to-cart" onclick="addToCart('dairy1', 'Organic Milk', '₹89.00', 'https://images.unsplash.com/photo-1550583724-b2692b85b150', 'Happy Cow Dairy')">Add to Cart</button>
+            
+            <div class="text-center mt-12">
+                <a href="products.html" class="inline-flex items-center px-8 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 hover:shadow-md">
+                    <span>View All Products</span>
+                    <i class="fas fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
+                </a>
             </div>
-        </div>
-        <div class="view-all" data-aos="fade-up">
-            <a href="products.html" class="cta-button">View All Products <i class="fas fa-arrow-right"></i></a>
         </div>
     </section>
 
     <!-- Testimonials Section -->
-    <section class="testimonials-section">
-        <h2 data-aos="fade-up">What Our Customers Say</h2>
-        <div class="testimonials-slider">
-            <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="100">
-                <div class="testimonial-content">
-                    <div class="testimonial-text">
-                        <i class="fas fa-quote-left"></i>
-                        <p>I've been ordering from Farm Fresh for over a year. The quality is consistently excellent and the produce is so much fresher than what I find in supermarkets.</p>
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-secondary mb-12" data-aos="fade-up">What Our Customers Say</h2>
+            <div class="relative overflow-hidden" id="testimonials-container">
+                <div class="flex transition-transform duration-500 ease-in-out" id="testimonials-slider">
+                    <div class="w-full lg:w-1/3 flex-shrink-0 px-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 h-full">
+                            <div class="text-primary opacity-20 text-6xl font-serif absolute top-4 left-6">"</div>
+                            <div class="relative z-10 mb-6">
+                                <p class="text-gray-700 leading-relaxed">I've been ordering from Farm Fresh for over a year. The quality is consistently excellent and the produce is so much fresher than what I find in supermarkets.</p>
+                            </div>
+                            <div class="flex items-center mt-6">
+                                <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Customer" class="w-12 h-12 rounded-full object-cover mr-4">
+                                <div>
+                                    <h4 class="font-semibold text-secondary">Priya Sharma</h4>
+                                    <p class="text-sm text-gray-600">Regular Customer</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Customer" class="testimonial-image">
-                        <div class="author-info">
-                            <h4>Priya Sharma</h4>
-                            <p>Regular Customer</p>
+                    <div class="w-full lg:w-1/3 flex-shrink-0 px-4" data-aos="fade-up" data-aos-delay="150">
+                        <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 h-full">
+                            <div class="text-primary opacity-20 text-6xl font-serif absolute top-4 left-6">"</div>
+                            <div class="relative z-10 mb-6">
+                                <p class="text-gray-700 leading-relaxed">As a chef, I need the freshest ingredients. Farm Fresh delivers not just fresh produce but also incredible variety. Their seasonal fruits are exceptional!</p>
+                            </div>
+                            <div class="flex items-center mt-6">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Customer" class="w-12 h-12 rounded-full object-cover mr-4">
+                                <div>
+                                    <h4 class="font-semibold text-secondary">Rajesh Patel</h4>
+                                    <p class="text-sm text-gray-600">Professional Chef</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/3 flex-shrink-0 px-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 h-full">
+                            <div class="text-primary opacity-20 text-6xl font-serif absolute top-4 left-6">"</div>
+                            <div class="relative z-10 mb-6">
+                                <p class="text-gray-700 leading-relaxed">I appreciate knowing where my food comes from. The direct connection with farmers through Farm Fresh gives me peace of mind about what I feed my family.</p>
+                            </div>
+                            <div class="flex items-center mt-6">
+                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Customer" class="w-12 h-12 rounded-full object-cover mr-4">
+                                <div>
+                                    <h4 class="font-semibold text-secondary">Anita Desai</h4>
+                                    <p class="text-sm text-gray-600">Health Enthusiast</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="150">
-                <div class="testimonial-content">
-                    <div class="testimonial-text">
-                        <i class="fas fa-quote-left"></i>
-                        <p>As a chef, I need the freshest ingredients. Farm Fresh delivers not just fresh produce but also incredible variety. Their seasonal fruits are exceptional!</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Customer" class="testimonial-image">
-                        <div class="author-info">
-                            <h4>Rajesh Patel</h4>
-                            <p>Professional Chef</p>
-                        </div>
-                    </div>
+                <div class="flex justify-center mt-8 space-x-2">
+                    <button class="w-3 h-3 rounded-full bg-primary" id="dot-0"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-300" id="dot-1"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-300" id="dot-2"></button>
+                </div>
+                <div class="hidden lg:flex">
+                    <button class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none" id="prev-testimonial">
+                        <i class="fas fa-chevron-left text-primary"></i>
+                    </button>
+                    <button class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none" id="next-testimonial">
+                        <i class="fas fa-chevron-right text-primary"></i>
+                    </button>
                 </div>
             </div>
-            <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="200">
-                <div class="testimonial-content">
-                    <div class="testimonial-text">
-                        <i class="fas fa-quote-left"></i>
-                        <p>I appreciate knowing where my food comes from. The direct connection with farmers through Farm Fresh gives me peace of mind about what I feed my family.</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Customer" class="testimonial-image">
-                        <div class="author-info">
-                            <h4>Anita Desai</h4>
-                            <p>Health Enthusiast</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="testimonial-dots">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
         </div>
     </section>
 
     <!-- Farmers Section -->
-    <section class="farmers-section">
-        <div class="farmers-content" data-aos="fade-right">
-            <h2>Meet Our Farmers</h2>
-            <p>We work with passionate local farmers who are dedicated to sustainable and organic farming practices. Each product on our platform comes with a story and a direct connection to the person who grew it.</p>
-            <a href="#" class="cta-button">Learn More <i class="fas fa-arrow-right"></i></a>
-        </div>
-        <div class="farmers-image" data-aos="fade-left">
-            <img src="https://images.unsplash.com/photo-1581578017093-35f3b833f210" alt="Farmer working">
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1" data-aos="fade-right">
+                    <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-6">Meet Our Farmers</h2>
+                    <p class="text-gray-700 leading-relaxed mb-8">We work with passionate local farmers who are dedicated to sustainable and organic farming practices. Each product on our platform comes with a story and a direct connection to the person who grew it.</p>
+                    <a href="farmers.html" class="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+                        Learn More
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                <div class="order-1 lg:order-2 grid grid-cols-2 gap-4" data-aos="fade-left">
+                    <div class="overflow-hidden rounded-lg shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854" alt="Farmer" class="w-full h-64 object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="overflow-hidden rounded-lg shadow-sm mt-8">
+                        <img src="https://images.unsplash.com/photo-1589923188900-85dae523342b" alt="Farmer" class="w-full h-64 object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="overflow-hidden rounded-lg shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1" alt="Farmer" class="w-full h-64 object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="overflow-hidden rounded-lg shadow-sm mt-8">
+                        <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae" alt="Farmer" class="w-full h-64 object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq-section">
-        <h2 data-aos="fade-up">Frequently Asked Questions</h2>
-        <div class="faq-container">
-            <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
-                <div class="faq-question">
-                    <h3>How does Farm Fresh ensure product quality?</h3>
-                    <div class="faq-toggle"><i class="fas fa-plus"></i></div>
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-secondary mb-12" data-aos="fade-up">Frequently Asked Questions</h2>
+            <div class="space-y-6">
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="100">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <h3 class="text-lg font-semibold text-secondary">How does Farm Fresh ensure product quality?</h3>
+                        <span class="text-primary transition-transform duration-300 transform rotate-0">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+                    <div class="faq-content px-6 pb-4 hidden">
+                        <p class="text-gray-700">We have a strict quality control process. All farmers on our platform are verified and follow organic farming practices. Products are inspected before shipping, and we offer a 100% satisfaction guarantee.</p>
+                    </div>
                 </div>
-                <div class="faq-answer">
-                    <p>We work directly with vetted farmers who follow organic and sustainable practices. All products undergo quality checks before being delivered to ensure you receive only the freshest items.</p>
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="150">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <h3 class="text-lg font-semibold text-secondary">What areas do you deliver to?</h3>
+                        <span class="text-primary transition-transform duration-300 transform rotate-0">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+                    <div class="faq-content px-6 pb-4 hidden">
+                        <p class="text-gray-700">We currently deliver to all major cities and surrounding areas. Enter your pincode on the checkout page to check if we deliver to your location. We're constantly expanding our delivery network.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="faq-item" data-aos="fade-up" data-aos-delay="150">
-                <div class="faq-question">
-                    <h3>What areas do you deliver to?</h3>
-                    <div class="faq-toggle"><i class="fas fa-plus"></i></div>
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="200">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <h3 class="text-lg font-semibold text-secondary">How fresh are the products?</h3>
+                        <span class="text-primary transition-transform duration-300 transform rotate-0">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+                    <div class="faq-content px-6 pb-4 hidden">
+                        <p class="text-gray-700">Most products are harvested the same day or within 24 hours of delivery. This ensures maximum freshness and nutritional value compared to supermarket produce which may be days or weeks old.</p>
+                    </div>
                 </div>
-                <div class="faq-answer">
-                    <p>We currently deliver to major cities and surrounding areas. Enter your pincode during checkout to check if we deliver to your location.</p>
-                </div>
-            </div>
-            <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
-                <div class="faq-question">
-                    <h3>How do I become a supplier?</h3>
-                    <div class="faq-toggle"><i class="fas fa-plus"></i></div>
-                </div>
-                <div class="faq-answer">
-                    <p>If you're a farmer interested in joining our platform, please register as a farmer and our team will reach out to you for verification and onboarding.</p>
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="250">
+                    <button class="faq-toggle w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <h3 class="text-lg font-semibold text-secondary">Can I subscribe for regular deliveries?</h3>
+                        <span class="text-primary transition-transform duration-300 transform rotate-0">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+                    <div class="faq-content px-6 pb-4 hidden">
+                        <p class="text-gray-700">Yes! We offer flexible subscription plans for weekly, bi-weekly, or monthly deliveries. You can customize your subscription box and change, pause, or cancel anytime from your account dashboard.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Newsletter Section -->
-    <section class="newsletter-section">
-        <div class="newsletter-container" data-aos="fade-up">
-            <h2>Stay Updated</h2>
-            <p>Subscribe to our newsletter for seasonal updates, special offers, and farming tips</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Your email address" required>
-                <button type="submit" class="cta-button">Subscribe</button>
+    <section class="py-16 bg-primary/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-secondary mb-4">Stay Updated</h2>
+            <p class="text-gray-700 mb-8 max-w-2xl mx-auto">Subscribe to our newsletter for seasonal updates, special offers, and farming tips</p>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                <input type="email" placeholder="Your email address" required class="flex-grow px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all duration-300">
+                <button type="submit" class="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 whitespace-nowrap">
+                    Subscribe
+                    <i class="fas fa-paper-plane ml-2"></i>
+                </button>
             </form>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Farm Fresh</h3>
-                <p>Connecting farmers directly with consumers for the freshest organic produce.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+    <footer class="bg-secondary text-white pt-16 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div class="lg:col-span-1">
+                    <h3 class="text-xl font-bold mb-4">Farm Fresh</h3>
+                    <p class="text-gray-300 mb-6">Connecting farmers directly with consumers for the freshest organic produce.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition-colors duration-300">Home</a></li>
+                        <li><a href="products.html" class="text-gray-300 hover:text-white transition-colors duration-300">Products</a></li>
+                        <li><a href="farmers.html" class="text-gray-300 hover:text-white transition-colors duration-300">Farmers</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-white transition-colors duration-300">About Us</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-white transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">FAQ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Shipping Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Return Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
+                            <a href="mailto:ganeshlaxmankotwade@gmail.com" class="text-gray-300 hover:text-white transition-colors duration-300">ganeshlaxmankotwade@gmail.com</a>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone mt-1 mr-3 text-primary"></i>
+                            <a href="tel:+919373842949" class="text-gray-300 hover:text-white transition-colors duration-300">+91 9373842949</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul class="footer-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Products</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
+            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+                <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
             </div>
-            <div class="footer-section">
-                <h3>Contact Us</h3>
-                <ul class="contact-info">
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:ganeshlaxmankotwade@gmail.com">ganeshlaxmankotwade@gmail.com</a>
-                    </li>
-                    <li>
-                        <i class="fas fa-phone"></i>
-                        <a href="tel:+919373842949">+91 9373842949</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Scroll to top button -->
-    <div class="scroll-to-top" id="scrollToTop">
+    <button class="fixed bottom-6 right-6 w-12 h-12 bg-primary hover:bg-primary-dark text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 opacity-0 invisible" id="scrollToTop">
         <i class="fas fa-chevron-up"></i>
-    </div>
+    </button>
 
     <!-- Notification popup -->
     <div class="notification" id="notification"></div>
@@ -339,94 +640,64 @@
     <!-- Include JS files -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="webgl-animations.js?v=1.1"></script>
-    <script src="data-manager.js"></script>
-    <script src="access-control.js"></script>
-    <script src="mock_api.js"></script>
-    <script src="mock_api_handlers.js"></script>
-    <script src="script.js?v=1.1"></script>
-    <script src="fallback.js?v=1.1"></script>
-    <script src="prevent-downloads.js"></script>
+    <script src="public/js/navbar.js"></script>
+    <script src="public/js/webgl-animations.js"></script>
+    <script src="public/js/data-manager.js"></script>
+    <script src="public/js/access-control.js"></script>
+    <script src="public/js/api.service.js"></script>
+    <script src="public/js/script.js"></script>
+
     <script>
-        // Initialize AOS animations
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 50,
-            delay: 100,
-            easing: 'ease-in-out'
-        });
-
-        // Function to redirect to appropriate dashboard based on user type
-        function redirectToDashboard() {
-            const user = window.AccessControl.getCurrentUser();
-            if (!user) {
-                // If not logged in, redirect to login page
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            // Redirect based on user type
-            if (user.user_type === 'admin') {
-                window.location.href = 'admin-dashboard.html';
-            } else if (user.user_type === 'farmer') {
-                window.location.href = 'farmer-dashboard.html';
-            } else if (user.user_type === 'customer') {
-                window.location.href = 'customer-dashboard.html';
-            } else {
-                // Default fallback
-                window.location.href = 'admin-dashboard.html';
-            }
-        }
-        
-        // Update cart count on page load
+        // Initialize AOS animations and other page components
         document.addEventListener('DOMContentLoaded', function() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            document.querySelector('.cart-count').textContent = totalItems;
+            // The navbar will be initialized by navbar.js
+            // We just need to make sure we don't have duplicate initialization
             
-            // Initialize data manager
-            if (window.DataManager) {
-                window.DataManager.updateAllStats();
-            }
+            // Initialize AOS animations
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 50,
+                delay: 100,
+                easing: 'ease-in-out'
+            });
             
-            // Update login/dashboard link based on user status
-            updateNavLinks();
-
-            // Initialize testimonial slider
+            // Initialize other page components
             initTestimonialSlider();
-
-            // Initialize FAQ accordions
             initFaqAccordions();
-        });
-        
-        // Update navigation links based on user login status
-        function updateNavLinks() {
-            const user = window.AccessControl.getCurrentUser();
-            const loginLink = document.getElementById('login-link');
-            const dashboardLink = document.getElementById('dashboard-link');
             
-            if (user) {
-                loginLink.style.display = 'none';
-                dashboardLink.style.display = 'block';
-            } else {
-                loginLink.style.display = 'block';
-                dashboardLink.style.display = 'none';
+            // Update cart count on page load if function exists in global scope
+            if (typeof updateCartCount === 'function') {
+                updateCartCount();
             }
-        }
+        });
 
-        // Initialize testimonial slider functionality
+        // AOS animations are initialized in the DOMContentLoaded event handler above
+
+        // Initialize testimonial slider
         function initTestimonialSlider() {
-            const slides = document.querySelectorAll('.testimonial-slide');
-            const dots = document.querySelectorAll('.dot');
+            const slider = document.getElementById('testimonials-slider');
+            const dots = document.querySelectorAll('[id^="dot-"]');
+            const prevBtn = document.getElementById('prev-testimonial');
+            const nextBtn = document.getElementById('next-testimonial');
             let currentSlide = 0;
+            const slideCount = dots.length;
 
             function showSlide(index) {
-                slides.forEach(slide => slide.style.display = 'none');
-                dots.forEach(dot => dot.classList.remove('active'));
+                // Update active dot
+                dots.forEach(dot => dot.classList.remove('bg-primary'));
+                dots.forEach(dot => dot.classList.add('bg-gray-300'));
+                dots[index].classList.remove('bg-gray-300');
+                dots[index].classList.add('bg-primary');
                 
-                slides[index].style.display = 'block';
-                dots[index].classList.add('active');
+                // On mobile, transform the slider
+                if (window.innerWidth < 1024) {
+                    slider.style.transform = `translateX(-${index * 100}%)`;
+                } else {
+                    // On desktop, no transform needed as we show all slides
+                    slider.style.transform = 'translateX(0)';
+                }
+                
                 currentSlide = index;
             }
 
@@ -440,113 +711,195 @@
                 });
             });
 
-            // Auto-advance slides
+            // Add click events to prev/next buttons
+            if (prevBtn && nextBtn) {
+                prevBtn.addEventListener('click', () => {
+                    let prevSlide = (currentSlide - 1 + slideCount) % slideCount;
+                    showSlide(prevSlide);
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    let nextSlide = (currentSlide + 1) % slideCount;
+                    showSlide(nextSlide);
+                });
+            }
+
+            // Auto-advance slides on mobile only
             setInterval(() => {
-                let nextSlide = (currentSlide + 1) % slides.length;
-                showSlide(nextSlide);
+                if (window.innerWidth < 1024) {
+                    let nextSlide = (currentSlide + 1) % slideCount;
+                    showSlide(nextSlide);
+                }
             }, 5000);
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                // Reset transform when switching between mobile and desktop
+                if (window.innerWidth >= 1024) {
+                    slider.style.transform = 'translateX(0)';
+                } else {
+                    slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+                }
+            });
         }
 
         // Initialize FAQ accordions
         function initFaqAccordions() {
-            const faqItems = document.querySelectorAll('.faq-item');
+            const faqToggles = document.querySelectorAll('.faq-toggle');
             
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-                question.addEventListener('click', () => {
-                    // Toggle current item
-                    item.classList.toggle('active');
-                    const toggle = item.querySelector('.faq-toggle i');
-                    toggle.classList.toggle('fa-plus');
-                    toggle.classList.toggle('fa-minus');
+            faqToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const content = toggle.nextElementSibling;
+                    const icon = toggle.querySelector('i');
                     
-                    // Close other items
-                    faqItems.forEach(otherItem => {
-                        if (otherItem !== item && otherItem.classList.contains('active')) {
-                            otherItem.classList.remove('active');
-                            const otherToggle = otherItem.querySelector('.faq-toggle i');
-                            otherToggle.classList.add('fa-plus');
-                            otherToggle.classList.remove('fa-minus');
-                        }
-                    });
+                    // Toggle content visibility
+                    content.classList.toggle('hidden');
+                    
+                    // Rotate icon
+                    if (content.classList.contains('hidden')) {
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        icon.classList.add('rotate-180');
+                    }
                 });
             });
         }
 
-        // Export data as JSON (modified to show in modal instead of downloading)
-        function exportData(key) {
-            const data = localStorage.getItem(key);
+        // Add to wishlist function
+        function addToWishlist(productId) {
+            // Get existing wishlist from localStorage or initialize empty array
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
             
-            // Create modal to display data instead of downloading
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>${key} Data</h2>
-                    <pre>${data ? JSON.stringify(JSON.parse(data), null, 2) : 'No data available'}</pre>
-                </div>
-            `;
+            // Check if product is already in wishlist
+            if (!wishlist.includes(productId)) {
+                // Add product to wishlist
+                wishlist.push(productId);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                showNotification('Added to wishlist!', 'success');
+            } else {
+                // Remove from wishlist if already added
+                const updatedWishlist = wishlist.filter(id => id !== productId);
+                localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+                showNotification('Removed from wishlist', 'info');
+            }
             
-            document.body.appendChild(modal);
+            // Update wishlist count in navbar if function exists
+            if (typeof updateWishlistCount === 'function') {
+                updateWishlistCount();
+            }
+        }
+        
+        // Add to cart function (enhanced version)
+        function addToCart(productId, name, price, image, farmer) {
+            // Get existing cart from localStorage or initialize empty array
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
             
-            // Close modal when clicking the X or outside the modal
-            modal.querySelector('.close').onclick = function() {
-                document.body.removeChild(modal);
-            };
+            // Check if product is already in cart
+            const existingItemIndex = cart.findIndex(item => item.id === productId);
             
-            window.onclick = function(event) {
-                if (event.target === modal) {
-                    document.body.removeChild(modal);
+            if (existingItemIndex !== -1) {
+                // Increment quantity if already in cart
+                cart[existingItemIndex].quantity += 1;
+                showNotification(`Increased quantity of ${name}`, 'success');
+            } else {
+                // Add new item to cart
+                cart.push({
+                    id: productId,
+                    name: name,
+                    price: price,
+                    image: image,
+                    farmer: farmer,
+                    quantity: 1
+                });
+                showNotification(`${name} added to cart!`, 'success');
+            }
+            
+            // Save updated cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count in navbar
+            updateCartCount();
+            
+            // Add animation to cart icon in navbar
+            animateCartIcon();
+        }
+        
+        // Update cart count in navbar
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+            
+            const cartCountElement = document.getElementById('cart-count');
+            if (cartCountElement) {
+                cartCountElement.textContent = cartCount;
+                
+                if (cartCount > 0) {
+                    cartCountElement.classList.remove('hidden');
+                } else {
+                    cartCountElement.classList.add('hidden');
                 }
-            };
+            }
         }
-
-        // Add a button for admins to view data (instead of automatic downloads)
+        
+        // Animate cart icon when adding products
+        function animateCartIcon() {
+            const cartIcon = document.querySelector('.cart-icon');
+            if (cartIcon) {
+                cartIcon.classList.add('animate-bounce');
+                setTimeout(() => {
+                    cartIcon.classList.remove('animate-bounce');
+                }, 1000);
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50';
+            
+            // Set styles based on notification type
+            if (type === 'success') {
+                notification.classList.add('bg-primary', 'text-white');
+            } else if (type === 'error') {
+                notification.classList.add('bg-red-500', 'text-white');
+            } else {
+                notification.classList.add('bg-white', 'text-secondary', 'border', 'border-gray-200');
+            }
+            
+            // Show notification
+            notification.style.display = 'block';
+            notification.style.animation = 'slideIn 0.3s forwards';
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s forwards';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
+        
+        // Initialize components when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            const user = window.AccessControl.getCurrentUser();
-            if (user && user.user_type === 'admin') {
-                const footer = document.querySelector('.footer-bottom');
-                const dataButton = document.createElement('button');
-                dataButton.textContent = 'View Stored Data';
-                dataButton.className = 'admin-data-button';
-                dataButton.style.cssText = 'margin-top: 10px; padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;';
-                dataButton.onclick = function() {
-                    exportData('registeredUsers');
-                };
-                footer.appendChild(dataButton);
-            }
+            initTestimonialSlider();
+            initFaqAccordions();
+            
+            // Initialize cart count
+            updateCartCount();
+            
+            // Add hover effects to product cards
+            const productCards = document.querySelectorAll('.product-card-hover');
+            productCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.classList.add('shadow-lg', 'transform', 'scale-[1.02]');
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.classList.remove('shadow-lg', 'transform', 'scale-[1.02]');
+                });
+            });
         });
-
-        // Add to products.js
-        function displayProducts(products) {
-            const productsContainer = document.getElementById('products-container');
-            
-            if (!products || products.length === 0) {
-                productsContainer.innerHTML = `
-                    <div class="no-products">
-                        <i class="fas fa-box-open" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
-                        <p>No products available at the moment.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Rest of the display logic...
-        }
-
-        // Add loading state handling
-        function showLoading() {
-            const productsContainer = document.getElementById('products-container');
-            productsContainer.innerHTML = '<div class="loading">Loading products...</div>';
-        }
-
-        function hideLoading() {
-            const loading = document.querySelector('.loading');
-            if (loading) {
-                loading.remove();
-            }
-        }
     </script>
+    <div class="error-message" id="field-name-error"></div>
 </body>
 </html> 

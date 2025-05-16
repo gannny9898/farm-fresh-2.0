@@ -70,7 +70,15 @@ function displayProducts(products) {
     const productsContainer = document.getElementById('products-container');
     
     if (products.length === 0) {
-        productsContainer.innerHTML = '<p class="no-products">No products match your filters.</p>';
+        productsContainer.innerHTML = `
+            <div class="col-span-full text-center py-12">
+                <i class="fas fa-search text-gray-400 text-5xl mb-4"></i>
+                <p class="text-gray-600 font-medium text-lg">No products match your filters.</p>
+                <button onclick="window.location.href='products.html'" class="mt-4 inline-flex items-center text-primary hover:text-primary-dark">
+                    <i class="fas fa-undo mr-2"></i> Reset Filters
+                </button>
+            </div>
+        `;
         return;
     }
     
@@ -84,19 +92,47 @@ function displayProducts(products) {
         const farmer = users.find(user => user.id == product.farmer_id);
         const farmerName = farmer ? farmer.full_name : 'Unknown Farmer';
         
+        // Get category color
+        let categoryColor = '';
+        switch(product.category) {
+            case '1': categoryColor = 'bg-green-500'; break;
+            case '2': categoryColor = 'bg-orange-500'; break;
+            case '3': categoryColor = 'bg-blue-500'; break;
+            case '4': categoryColor = 'bg-yellow-500'; break;
+            case '5': categoryColor = 'bg-purple-500'; break;
+            default: categoryColor = 'bg-gray-500';
+        }
+        
         productsHTML += `
-            <div class="product-card">
-                <img src="${product.image || 'https://via.placeholder.com/300'}" alt="${product.name}" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-price">₹${product.price}/${product.unit || 'unit'}</p>
-                    <p class="product-farmer">
-                        <a href="farmer-profile.html?id=${product.farmer_id}" class="farmer-link">
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group" data-product-id="${product.id}">
+                <div class="relative">
+                    <img src="${product.image || 'https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Product'}" 
+                         alt="${product.name}" 
+                         class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute top-3 left-3 ${categoryColor} text-white text-xs font-semibold px-2 py-1 rounded-full">
+                        ${getCategoryName(product.category)}
+                    </div>
+                    <button class="absolute top-3 right-3 bg-white/80 text-gray-500 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            onclick="addToWishlist('${product.id}')" aria-label="Add to wishlist">
+                        <i class="fas fa-heart text-sm"></i>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-semibold mb-2 text-gray-800 group-hover:text-primary transition-colors">${product.name}</h3>
+                    <div class="flex items-center mb-3">
+                        <img src="https://via.placeholder.com/50/4CAF50/FFFFFF?text=F" alt="Farmer" class="w-5 h-5 rounded-full mr-1 border border-green-200">
+                        <a href="farmer-profile.html?id=${product.farmer_id}" class="text-xs text-gray-500 hover:text-primary transition-colors">
                             By ${farmerName}
                         </a>
-                    </p>
-                    <p class="product-category">${getCategoryName(product.category)}</p>
-                    <button class="add-to-cart-btn" data-product-id="${product.id}">Add to Cart</button>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-lg font-bold text-primary">₹${product.price}<span class="text-xs text-gray-500">/${product.unit || 'unit'}</span></div>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">In Stock</span>
+                    </div>
+                    <button class="w-full bg-primary hover:bg-primary-dark text-white py-2.5 rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-300 hover:shadow add-to-cart-btn" 
+                            data-product-id="${product.id}">
+                        <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                    </button>
                 </div>
             </div>
         `;
@@ -329,8 +365,51 @@ function updateNavigation() {
     // Implementation of updateNavigation function
 }
 
-// Function to check if user is logged in
+/**
+ * Function to check if user is logged in
+ */
 function isLoggedIn() {
-    // Implementation of isLoggedIn function
-    return false; // Placeholder return, actual implementation needed
-} 
+    const user = JSON.parse(localStorage.getItem('user'));
+    return !!user;
+}
+
+/**
+ * Add product to wishlist
+ */
+function addToWishlist(productId) {
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+        showNotification('Please login to add items to wishlist', 'warning');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const product = products.find(p => p.id === productId);
+    
+    if (!product) {
+        showNotification('Product not found', 'error');
+        return;
+    }
+    
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const existingItem = wishlist.find(item => item.id === productId);
+    
+    if (existingItem) {
+        // If already in wishlist, remove it
+        wishlist = wishlist.filter(item => item.id !== productId);
+        showNotification('Product removed from wishlist', 'success');
+    } else {
+        // Add to wishlist
+        wishlist.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            farmer_id: product.farmer_id
+        });
+        showNotification('Product added to wishlist', 'success');
+    }
+    
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+}

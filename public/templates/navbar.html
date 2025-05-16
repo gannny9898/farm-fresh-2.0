@@ -1,0 +1,108 @@
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center space-x-2">
+            <img src="./public/images/farm-logo.svg" alt="Farm Fresh Logo" class="w-10 h-10 logo-image">
+            <span class="text-xl font-bold text-primary">Farm Fresh</span>
+        </a>
+
+        <button class="lg:hidden flex flex-col space-y-1.5" id="mobile-menu-button">
+            <span class="block w-6 h-0.5 bg-secondary rounded-full transition-all"></span>
+            <span class="block w-6 h-0.5 bg-secondary rounded-full transition-all"></span>
+            <span class="block w-6 h-0.5 bg-secondary rounded-full transition-all"></span>
+        </button>
+
+        <div class="hidden lg:flex items-center space-x-8">
+            <a href="index.html" class="text-secondary hover:text-primary font-medium transition-colors duration-300">Home</a>
+            <a href="products.html" class="text-secondary hover:text-primary font-medium transition-colors duration-300">Products</a>
+            <a href="farmers.html" class="text-secondary hover:text-primary font-medium transition-colors duration-300">Farmers</a>
+            <a href="about.html" class="text-secondary hover:text-primary font-medium transition-colors duration-300">About</a>
+            <a href="contact.html" class="text-secondary hover:text-primary font-medium transition-colors duration-300">Contact</a>
+        </div>
+
+        <div class="hidden lg:flex items-center space-x-4">
+            <div class="auth-links hidden">
+                <a href="login.html" class="px-4 py-2 text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition-all duration-300">Login</a>
+                <a href="register.html" class="ml-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-all duration-300">Register</a>
+            </div>
+
+            <div class="user-profile flex items-center space-x-4">
+                <a href="cart.html" class="relative text-secondary hover:text-primary transition-colors duration-300">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center cart-count">0</span>
+                </a>
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <i class="fas fa-user-circle text-2xl text-secondary"></i>
+                        <span class="user-name font-medium">User Name</span>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-300 group-hover:rotate-180"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right">
+                        <a href="#" id="dashboard-link" class="block px-4 py-3 text-secondary hover:bg-gray-50 hover:text-primary transition-colors duration-300">Dashboard</a>
+                        <a href="profile.html" class="block px-4 py-3 text-secondary hover:bg-gray-50 hover:text-primary transition-colors duration-300">Profile</a>
+                        <a href="orders.html" class="block px-4 py-3 text-secondary hover:bg-gray-50 hover:text-primary transition-colors duration-300">Orders</a>
+                        <a href="#" id="logout-btn" class="block px-4 py-3 text-secondary hover:bg-gray-50 hover:text-primary transition-colors duration-300">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile menu, show/hide based on menu state -->
+    <div class="lg:hidden hidden bg-white border-t border-gray-100" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">Home</a>
+            <a href="products.html" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">Products</a>
+            <a href="farmers.html" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">Farmers</a>
+            <a href="about.html" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">About</a>
+            <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">Contact</a>
+        </div>
+        <div class="pt-4 pb-3 border-t border-gray-200">
+            <div class="flex items-center px-5">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-user-circle text-3xl text-secondary"></i>
+                </div>
+                <div class="ml-3">
+                    <div class="text-base font-medium text-secondary user-name">User Name</div>
+                </div>
+                <a href="cart.html" class="ml-auto relative text-secondary hover:text-primary transition-colors duration-300">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center cart-count">0</span>
+                </a>
+            </div>
+            <div class="mt-3 px-2 space-y-1">
+                <a href="#" id="mobile-dashboard-link" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">Dashboard</a>
+                <a href="profile.html" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">Profile</a>
+                <a href="orders.html" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">Orders</a>
+                <a href="#" id="mobile-logout-btn" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-50 transition-colors duration-300">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Add padding to body to account for fixed navbar -->
+<style>
+body {
+    padding-top: 64px; /* 4rem (h-16) */
+}
+</style>
+
+<!-- Mobile menu toggle script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+            // Animate hamburger to X
+            const spans = mobileMenuButton.querySelectorAll('span');
+            spans[0].classList.toggle('rotate-45');
+            spans[0].classList.toggle('translate-y-2');
+            spans[1].classList.toggle('opacity-0');
+            spans[2].classList.toggle('-rotate-45');
+            spans[2].classList.toggle('-translate-y-2');
+        });
+    }
+});
+</script> 

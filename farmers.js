@@ -98,7 +98,7 @@ function displayFarmers(farmers) {
     const farmersContainer = document.getElementById('farmers-container');
     
     if (farmers.length === 0) {
-        farmersContainer.innerHTML = '<p class="no-farmers">No farmers match your filters.</p>';
+        farmersContainer.innerHTML = '<div class="col-span-full text-center py-16"><p class="text-lg text-gray-600">No farmers match your filters.</p></div>';
         return;
     }
     
@@ -107,7 +107,7 @@ function displayFarmers(farmers) {
     
     let farmersHTML = '';
     
-    farmers.forEach(farmer => {
+    farmers.forEach((farmer, index) => {
         // Calculate average rating
         const farmerReviews = allReviews[farmer.id] || [];
         let averageRating = 0;
@@ -130,59 +130,80 @@ function displayFarmers(farmers) {
             
             farmer.product_categories.forEach(catId => {
                 const categoryName = categoryNames[catId] || 'Other';
-                categoriesHTML += `<span class="category-badge">${categoryName}</span>`;
+                categoriesHTML += `<span class="inline-block px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full mr-2 mb-2">${categoryName}</span>`;
             });
         }
         
         // Generate organic badge
         const organicBadge = farmer.organic_certified ? 
-            '<span class="organic-badge"><i class="fas fa-leaf"></i> Organic Certified</span>' : '';
+            '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 mb-2"><i class="fas fa-leaf mr-1"></i> Organic Certified</span>' : '';
+        
+        // Calculate AOS delay based on index
+        const aosDelay = (index % 3) * 100;
         
         farmersHTML += `
-            <div class="farmer-card">
-                <div class="farmer-image">
-                    <img src="${farmer.profile_photo || 'https://via.placeholder.com/300'}" alt="${farmer.full_name}">
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="${aosDelay}">
+                <div class="relative overflow-hidden group">
+                    <img src="${farmer.profile_photo || 'https://via.placeholder.com/300'}" 
+                         alt="${farmer.full_name}" 
+                         class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105">
+                    ${organicBadge ? `<div class="absolute top-3 right-3">${organicBadge}</div>` : ''}
                 </div>
-                <div class="farmer-info">
-                    <h3 class="farmer-name">${farmer.full_name}</h3>
-                    <h4 class="farm-name">${farmer.farm_name || 'Farm Name Not Available'}</h4>
-                    <p class="farm-location"><i class="fas fa-map-marker-alt"></i> ${farmer.farm_location || 'Location Not Available'}</p>
-                    
-                    <div class="farmer-rating">
-                        ${generateStarRating(averageRating)}
-                        <span class="rating-count">(${farmerReviews.length} ${farmerReviews.length === 1 ? 'review' : 'reviews'})</span>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-semibold text-secondary">${farmer.full_name}</h3>
+                        <div class="star-rating">
+                            ${generateStarRating(averageRating)}
+                        </div>
                     </div>
                     
-                    <div class="farmer-categories">
+                    <h4 class="text-primary font-medium mb-3">${farmer.farm_name || 'Farm Name Not Available'}</h4>
+                    
+                    <p class="flex items-center text-gray-600 mb-4">
+                        <i class="fas fa-map-marker-alt text-primary mr-2"></i> 
+                        ${farmer.farm_location || 'Location Not Available'}
+                    </p>
+                    
+                    <div class="mb-4 flex flex-wrap">
                         ${categoriesHTML}
                     </div>
                     
-                    ${organicBadge}
-                    
-                    <a href="farmer-profile.html?id=${farmer.id}" class="view-profile-btn">View Profile</a>
+                    <div class="flex justify-between items-center mt-6">
+                        <span class="text-sm text-gray-500">${farmerReviews.length} ${farmerReviews.length === 1 ? 'review' : 'reviews'}</span>
+                        <a href="farmer-profile.html?id=${farmer.id}" class="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105">
+                            View Profile
+                            <i class="fas fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         `;
     });
     
     farmersContainer.innerHTML = farmersHTML;
+    
+    // Reinitialize AOS for dynamically added elements
+    if (typeof AOS !== 'undefined') {
+        AOS.refresh();
+    }
 }
 
 /**
  * Generate HTML for star rating
  */
 function generateStarRating(rating) {
-    const fullStar = '★';
-    const emptyStar = '☆';
     const roundedRating = Math.round(rating * 2) / 2; // Round to nearest 0.5
     
     let starsHTML = '';
     
     for (let i = 1; i <= 5; i++) {
         if (i <= roundedRating) {
-            starsHTML += `<span class="star">${fullStar}</span>`;
+            starsHTML += `<i class="fas fa-star"></i>`;
+        } else if (i - 0.5 === roundedRating) {
+            starsHTML += `<i class="fas fa-star-half-alt"></i>`;
         } else {
-            starsHTML += `<span class="star empty">${emptyStar}</span>`;
+            starsHTML += `<i class="far fa-star empty"></i>`;
         }
     }
     

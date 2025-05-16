@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Farmer Dashboard - Farm Fresh</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="public/css/navbar.css">
+    <link rel="stylesheet" href="public/css/styles.css">
     <style>
         .dashboard-container {
             max-width: 1200px;
@@ -386,92 +391,88 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <h1>🌾 Farm Fresh</h1>
-        </div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="products.html">Products</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" onclick="logout()">Logout</a>
-        </div>
-    </nav>
+    <!-- Include navbar template -->
+    <div id="navbar-container"></div>
 
+    <!-- Dashboard Content -->
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1>Farmer Dashboard</h1>
-            <div id="farmer-name"></div>
+            <div class="header-actions">
+                <button class="action-btn" onclick="addProduct()">
+                    <i class="fas fa-plus"></i> Add Product
+                </button>
+            </div>
         </div>
 
+        <!-- Stats Grid -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>Total Sales</h3>
-                <div class="value">₹25,480</div>
+                <h3>Total Products</h3>
+                <div class="value" id="total-products">0</div>
             </div>
             <div class="stat-card">
-                <h3>Active Products</h3>
-                <div class="value">12</div>
+                <h3>Active Orders</h3>
+                <div class="value" id="active-orders">0</div>
             </div>
             <div class="stat-card">
-                <h3>Pending Orders</h3>
-                <div class="value">5</div>
+                <h3>Total Revenue</h3>
+                <div class="value" id="total-revenue">₹0</div>
             </div>
             <div class="stat-card">
-                <h3>Total Customers</h3>
-                <div class="value">38</div>
+                <h3>Customer Rating</h3>
+                <div class="value" id="customer-rating">0.0 ⭐</div>
             </div>
         </div>
 
-        <div class="products-section">
-            <div class="products-header">
+        <!-- Products Section -->
+        <div class="section">
+            <div class="section-header">
                 <h2>My Products</h2>
-                <button class="add-product-btn" onclick="showAddProductModal()">+ Add New Product</button>
+                <div class="search-box">
+                    <input type="text" placeholder="Search products..." id="product-search">
+                    <button onclick="searchProducts()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
-            <div class="products-grid" id="products-grid">
-                <!-- Products will be loaded dynamically -->
+            <div class="data-table-container">
+                <table class="data-table" id="products-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-body"></tbody>
+                </table>
             </div>
         </div>
 
-        <div class="inventory-section">
-            <div class="inventory-header">
-                <h2>Inventory Management</h2>
-                <button class="add-product-btn" onclick="showBulkUpdateModal()">Update Stock</button>
+        <!-- Orders Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Recent Orders</h2>
             </div>
-            <table class="inventory-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Category</th>
-                        <th>Current Stock</th>
-                        <th>Stock Status</th>
-                        <th>Last Updated</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="inventory-table-body">
-                    <!-- Inventory will be loaded dynamically -->
-                </tbody>
-            </table>
-        </div>
-
-        <div class="orders-section">
-            <h2>Recent Orders</h2>
-            <table class="orders-table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Products</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="orders-table-body">
-                    <!-- Orders will be loaded dynamically -->
-                </tbody>
-            </table>
+            <div class="data-table-container">
+                <table class="data-table" id="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Products</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-body"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -600,538 +601,24 @@
         </svg>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="public/js/navbar.js"></script>
+    <script src="public/js/farmer-dashboard.js"></script>
+    
     <script>
-        // Check if user is logged in and is a farmer
-        document.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user || user.user_type !== 'farmer') {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Display farmer name
-            document.getElementById('farmer-name').textContent = `Welcome, ${user.full_name}`;
-
-            // Load mock data
-            loadMockProducts();
-            loadMockOrders();
-            loadMockInventory();
-            populateProductDropdown();
-        });
-
-        function loadMockProducts() {
-            // Get current user
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) return;
-            
-            // Get products from localStorage
-            const allProducts = JSON.parse(localStorage.getItem('products')) || [];
-            
-            // Filter products for current farmer
-            const farmerProducts = allProducts.filter(product => 
-                product.farmerId === user.id || product.farmerName === user.full_name
-            );
-            
-            // Update stats
-            document.querySelector('.stats-grid .stat-card:nth-child(2) .value').textContent = farmerProducts.length;
-            
-            // If no products, show message
-            const productsGrid = document.getElementById('products-grid');
-            if (farmerProducts.length === 0) {
-                productsGrid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                        <p>You haven't added any products yet.</p>
-                        <button class="add-product-btn" onclick="showAddProductModal()" style="margin-top: 1rem;">+ Add Your First Product</button>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Render products
-            productsGrid.innerHTML = farmerProducts.map(product => `
-                <div class="product-card">
-                    <img src="${product.image}" alt="${product.name}" loading="lazy">
-                    <div class="product-info">
-                        <h3>${product.name}</h3>
-                        <div class="price">₹${product.price}/${product.unit}</div>
-                        <div class="product-actions">
-                            <button class="edit-btn" onclick="editProduct(${product.id})">Edit</button>
-                            <button class="delete-btn" onclick="deleteProduct(${product.id})">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function loadMockOrders() {
-            // Get current user
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) return;
-            
-            // Get orders from localStorage
-            const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
-            
-            // Filter orders that contain products from this farmer
-            // In a real app, we would have a proper relationship between products and farmers
-            // For now, we'll just check if the farmer's name appears in the order items
-            const farmerOrders = allOrders.filter(order => {
-                return order.items.some(item => 
-                    item.farmer && item.farmer.includes(user.farm_name || user.full_name)
-                );
+        // Load navbar template
+        fetch('public/templates/navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+                // Initialize navbar after loading template
+                if (window.Navbar) {
+                    window.navbar = Navbar.init();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading navbar template:', error);
             });
-            
-            // Sort orders by date (newest first)
-            farmerOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
-            
-            // Update stats
-            document.querySelector('.stats-grid .stat-card:nth-child(1) .value').textContent = 
-                '₹' + farmerOrders.reduce((total, order) => {
-                    // Calculate total for this farmer's products only
-                    const farmerItemsTotal = order.items
-                        .filter(item => item.farmer && item.farmer.includes(user.farm_name || user.full_name))
-                        .reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                    return total + farmerItemsTotal;
-                }, 0).toFixed(2);
-            
-            const pendingOrders = farmerOrders.filter(order => 
-                ['pending', 'processing', 'shipped'].includes(order.status)
-            ).length;
-            document.querySelector('.stats-grid .stat-card:nth-child(3) .value').textContent = pendingOrders;
-            
-            // Count unique customers
-            const uniqueCustomers = new Set(farmerOrders.map(order => order.userId)).size;
-            document.querySelector('.stats-grid .stat-card:nth-child(4) .value').textContent = uniqueCustomers;
-            
-            // If no orders, show message
-            const ordersTableBody = document.getElementById('orders-table-body');
-            if (farmerOrders.length === 0) {
-                ordersTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center;">You don't have any orders yet.</td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            // Render orders
-            ordersTableBody.innerHTML = farmerOrders.map(order => {
-                // Format the items list - only show this farmer's items
-                const farmerItems = order.items.filter(item => 
-                    item.farmer && item.farmer.includes(user.farm_name || user.full_name)
-                );
-                
-                const itemsList = farmerItems.map(item => `${item.name} (${item.quantity})`).join(', ');
-                
-                // Calculate total for this farmer's items only
-                const farmerTotal = farmerItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                
-                // Format the date
-                const orderDate = new Date(order.orderDate);
-                const formattedDate = orderDate.toLocaleDateString();
-                
-                return `
-                <tr>
-                    <td>${order.id}</td>
-                    <td>${order.userName}</td>
-                    <td>${itemsList}</td>
-                    <td>₹${farmerTotal.toFixed(2)}</td>
-                    <td><span class="status-badge status-${order.status}">${order.status}</span></td>
-                    <td>
-                        <button onclick="viewOrder('${order.id}')" 
-                                class="add-product-btn" 
-                                style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin-right: 5px;">
-                            View Details
-                        </button>
-                        <button onclick="updateOrderStatus('${order.id}')" 
-                                class="add-product-btn" 
-                                style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                            Update Status
-                        </button>
-                    </td>
-                </tr>
-                `;
-            }).join('');
-        }
-
-        function viewOrder(orderId) {
-            // Get orders from localStorage
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            const order = orders.find(o => o.id === orderId);
-            
-            if (!order) {
-                alert('Order not found!');
-                return;
-            }
-            
-            // Get current user
-            const user = JSON.parse(localStorage.getItem('user'));
-            
-            // Filter items for this farmer only
-            const farmerItems = order.items.filter(item => 
-                item.farmer && item.farmer.includes(user.farm_name || user.full_name)
-            );
-            
-            // Format items for display
-            const itemsDetails = farmerItems.map(item => 
-                `${item.name} - ₹${item.price.toFixed(2)} x ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}`
-            ).join('\n');
-            
-            // Calculate total for this farmer's items only
-            const farmerTotal = farmerItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            const orderDetails = `
-Order ID: ${order.id}
-Customer: ${order.userName} (${order.userEmail})
-Date: ${new Date(order.orderDate).toLocaleString()}
-Status: ${order.status}
-Delivery Address: ${order.deliveryAddress}
-
-Your Items in This Order:
-${itemsDetails}
-
-Your Total: ₹${farmerTotal.toFixed(2)}
-            `;
-            
-            alert(orderDetails);
-        }
-
-        function updateOrderStatus(orderId) {
-            // Get orders from localStorage
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            const order = orders.find(o => o.id === orderId);
-            
-            if (!order) {
-                alert('Order not found!');
-                return;
-            }
-            
-            const newStatus = prompt('Enter new status (pending, processing, shipped, delivered, cancelled):', order.status);
-            
-            if (newStatus && ['pending', 'processing', 'shipped', 'delivered', 'cancelled'].includes(newStatus)) {
-                order.status = newStatus;
-                localStorage.setItem('orders', JSON.stringify(orders));
-                loadMockOrders();
-                alert(`Order status updated to: ${newStatus}`);
-            } else if (newStatus) {
-                alert('Invalid status. Please use: pending, processing, shipped, delivered, or cancelled');
-            }
-        }
-
-        function loadMockInventory() {
-            // Get current user
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) return;
-            
-            // Get products from localStorage
-            const allProducts = JSON.parse(localStorage.getItem('products')) || [];
-            
-            // Filter products for current farmer
-            const farmerProducts = allProducts.filter(product => 
-                product.farmerId === user.id || product.farmerName === user.full_name
-            );
-            
-            // If no products, show message
-            const inventoryTableBody = document.getElementById('inventory-table-body');
-            if (farmerProducts.length === 0) {
-                inventoryTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center;">You haven't added any products yet.</td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            // Render inventory
-            inventoryTableBody.innerHTML = farmerProducts.map(product => {
-                // Determine stock status
-                let stockStatus = 'ok';
-                if (product.stock <= 5) {
-                    stockStatus = 'low';
-                } else if (product.stock >= 50) {
-                    stockStatus = 'high';
-                }
-                
-                return `
-                <tr>
-                    <td>${product.name}</td>
-                    <td>${getCategoryName(product.category)}</td>
-                    <td>${product.stock} ${product.unit}</td>
-                    <td><span class="stock-status stock-${stockStatus}">${stockStatus.toUpperCase()}</span></td>
-                    <td>${new Date(product.updatedAt || product.createdAt).toLocaleDateString()}</td>
-                    <td>
-                        <button onclick="updateProductStock(${product.id})" 
-                                class="add-product-btn" 
-                                style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                            Update
-                        </button>
-                    </td>
-                </tr>
-                `;
-            }).join('');
-        }
-
-        function populateProductDropdown() {
-            // Get current user
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) return;
-            
-            // Get products from localStorage
-            const allProducts = JSON.parse(localStorage.getItem('products')) || [];
-            
-            // Filter products for current farmer
-            const farmerProducts = allProducts.filter(product => 
-                product.farmerId === user.id || product.farmerName === user.full_name
-            );
-            
-            const stockProductSelect = document.getElementById('stock-product');
-            stockProductSelect.innerHTML = '<option value="">Select Product</option>' + 
-                farmerProducts.map(product => `
-                    <option value="${product.id}">${product.name}</option>
-                `).join('');
-        }
-
-        function getCategoryName(categoryId) {
-            const categories = {
-                '1': 'Vegetables',
-                '2': 'Fruits',
-                '3': 'Dairy',
-                '4': 'Grains',
-                '5': 'Herbs'
-            };
-            return categories[categoryId] || 'Other';
-        }
-
-        function showAddProductModal() {
-            document.getElementById('add-product-modal').style.display = 'block';
-        }
-
-        function showBulkUpdateModal() {
-            document.getElementById('update-stock-modal').style.display = 'block';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        function editProduct(productId) {
-            // Get products from localStorage
-            const products = JSON.parse(localStorage.getItem('products')) || [];
-            const product = products.find(p => p.id === productId);
-            
-            if (!product) {
-                alert('Product not found!');
-                return;
-            }
-            
-            // Populate form with product data
-            document.getElementById('product-name').value = product.name;
-            document.getElementById('product-category').value = product.category;
-            document.getElementById('product-price').value = product.price;
-            document.getElementById('product-unit').value = product.unit;
-            document.getElementById('product-stock').value = product.stock;
-            document.getElementById('product-description').value = product.description;
-            document.getElementById('product-image').value = product.image;
-            
-            // Check features
-            if (product.features) {
-                product.features.forEach(feature => {
-                    const checkbox = document.getElementById(`feature-${feature}`);
-                    if (checkbox) checkbox.checked = true;
-                });
-            }
-            
-            // Store product ID for update
-            document.getElementById('add-product-form').dataset.productId = productId;
-            
-            // Change button text
-            document.querySelector('#add-product-form .submit-btn').textContent = 'Update Product';
-            
-            // Show modal
-            showAddProductModal();
-        }
-
-        function deleteProduct(productId) {
-            if (!confirm('Are you sure you want to delete this product?')) {
-                return;
-            }
-            
-            // Get products from localStorage
-            const products = JSON.parse(localStorage.getItem('products')) || [];
-            const updatedProducts = products.filter(p => p.id !== productId);
-            
-            // Save back to localStorage
-            localStorage.setItem('products', JSON.stringify(updatedProducts));
-            
-            // Reload products
-            loadMockProducts();
-            loadMockInventory();
-            populateProductDropdown();
-            
-            alert('Product deleted successfully!');
-        }
-
-        function updateProductStock(productId) {
-            // Set product ID in dropdown
-            document.getElementById('stock-product').value = productId;
-            
-            // Get current stock
-            const products = JSON.parse(localStorage.getItem('products')) || [];
-            const product = products.find(p => p.id === productId);
-            
-            if (product) {
-                document.getElementById('stock-quantity').value = product.stock;
-            }
-            
-            // Show modal
-            showBulkUpdateModal();
-        }
-
-        function logout() {
-            localStorage.removeItem('user');
-            localStorage.removeItem('token');
-            window.location.href = 'login.html';
-        }
-
-        // Form submission handlers
-        document.getElementById('add-product-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get current user
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) return;
-            
-            // Get form values
-            const productName = document.getElementById('product-name').value;
-            const productCategory = document.getElementById('product-category').value;
-            const productPrice = parseFloat(document.getElementById('product-price').value);
-            const productUnit = document.getElementById('product-unit').value;
-            const productStock = parseInt(document.getElementById('product-stock').value);
-            const productDescription = document.getElementById('product-description').value;
-            const productImage = document.getElementById('product-image').value;
-            
-            // Get selected features
-            const features = [];
-            document.querySelectorAll('input[name="product-features"]:checked').forEach(checkbox => {
-                features.push(checkbox.value);
-            });
-            
-            // Get products from localStorage
-            const products = JSON.parse(localStorage.getItem('products')) || [];
-            
-            // Check if we're updating an existing product
-            const productId = this.dataset.productId;
-            
-            if (productId) {
-                // Update existing product
-                const productIndex = products.findIndex(p => p.id === parseInt(productId));
-                
-                if (productIndex !== -1) {
-                    products[productIndex] = {
-                        ...products[productIndex],
-                        name: productName,
-                        category: productCategory,
-                        price: productPrice,
-                        unit: productUnit,
-                        stock: productStock,
-                        description: productDescription,
-                        image: productImage,
-                        features: features,
-                        updatedAt: new Date().toISOString()
-                    };
-                    
-                    // Save back to localStorage
-                    localStorage.setItem('products', JSON.stringify(products));
-                    
-                    alert(`Product "${productName}" updated successfully!`);
-                }
-            } else {
-                // Create new product
-                const newProduct = {
-                    id: Date.now(),
-                    name: productName,
-                    category: productCategory,
-                    price: productPrice,
-                    unit: productUnit,
-                    stock: productStock,
-                    description: productDescription,
-                    image: productImage,
-                    features: features,
-                    farmerId: user.id,
-                    farmerName: user.farm_name || user.full_name,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                
-                // Add to products array
-                products.push(newProduct);
-                
-                // Save to localStorage
-                localStorage.setItem('products', JSON.stringify(products));
-                
-                alert(`Product "${productName}" added successfully!`);
-            }
-            
-            // Close the modal and reset form
-            closeModal('add-product-modal');
-            this.reset();
-            delete this.dataset.productId;
-            document.querySelector('#add-product-form .submit-btn').textContent = 'Add Product';
-            
-            // Reload products
-            loadMockProducts();
-            loadMockInventory();
-            populateProductDropdown();
-        });
-
-        document.getElementById('update-stock-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const productId = parseInt(document.getElementById('stock-product').value);
-            const quantity = parseInt(document.getElementById('stock-quantity').value);
-            const updateType = document.getElementById('stock-update-type').value;
-            const notes = document.getElementById('stock-notes').value;
-            
-            // Get products from localStorage
-            const products = JSON.parse(localStorage.getItem('products')) || [];
-            const productIndex = products.findIndex(p => p.id === productId);
-            
-            if (productIndex !== -1) {
-                // Update stock based on update type
-                if (updateType === 'set') {
-                    products[productIndex].stock = quantity;
-                } else if (updateType === 'add') {
-                    products[productIndex].stock += quantity;
-                } else if (updateType === 'subtract') {
-                    products[productIndex].stock = Math.max(0, products[productIndex].stock - quantity);
-                }
-                
-                // Update timestamp
-                products[productIndex].updatedAt = new Date().toISOString();
-                
-                // Save back to localStorage
-                localStorage.setItem('products', JSON.stringify(products));
-                
-                alert(`Stock updated successfully!`);
-            } else {
-                alert('Product not found!');
-            }
-            
-            // Close the modal and reset form
-            closeModal('update-stock-modal');
-            this.reset();
-            
-            // Reload inventory
-            loadMockInventory();
-        });
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target.className === 'modal') {
-                event.target.style.display = 'none';
-            }
-        }
     </script>
 </body>
-</html> 
+</html>

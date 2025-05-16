@@ -3,69 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Farmers - Farm Fresh</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="farmers.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="logo">
-                <a href="index.html">
-                    <i class="fas fa-leaf"></i>
-                    <span>Farm Fresh</span>
-                </a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="farmers.html" class="active">Farmers</a></li>
-                <li><a href="#" id="dashboard-link" onclick="redirectToDashboard(); return false;">Dashboard</a></li>
-                <li>
-                    <a href="cart.html" class="cart-link">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="auth-links">
-                <a href="login.html" class="login-btn">Login</a>
-                <a href="register.html" class="register-btn">Register</a>
-            </div>
-            <div class="user-profile">
-                <img src="https://via.placeholder.com/40" alt="User Profile" class="profile-img">
-                <span class="user-name">John Doe</span>
-                <div class="dropdown-content">
-                    <a href="#" id="profile-link">Profile</a>
-                    <a href="#" id="logout-btn">Logout</a>
-                </div>
-            </div>
-            <div class="hamburger">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#4CAF50',
+                            light: '#6ABF6E',
+                            dark: '#45a049',
+                        },
+                        secondary: {
+                            DEFAULT: '#2c3e50',
+                            light: '#3d5366',
+                            dark: '#1a2530',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-in-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="public/css/navbar.css">
+    <style>
+        /* Custom animations */
+        @keyframes expandWidth {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+        
+        .animate-expand-width {
+            animation: expandWidth 1s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        
+        /* Star rating styles */
+        .star-rating {
+            display: inline-flex;
+            color: #FFD700;
+        }
+        
+        .star-rating .empty {
+            color: #e2e8f0;
+        }
+    </style>
+<body class="bg-gray-50">
+    <!-- Include navbar template -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="relative py-20 bg-gradient-to-r from-primary/10 to-secondary/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-secondary mb-4 fade-in-up">Meet Our Farmers</h1>
+            <div class="w-24 h-1 bg-primary mx-auto mb-6 fade-in-up delay-100"></div>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto fade-in-up delay-200">Discover the passionate people behind your food who are committed to sustainable and organic farming practices</p>
         </div>
-    </nav>
+    </section>
 
     <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <h1 class="page-title">Our Farmers</h1>
-            
+    <main class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Filter and Search Section -->
-            <div class="filter-search-container">
-                <form id="filter-form" class="filter-form">
-                    <div class="form-group">
-                        <label for="search-filter">Search</label>
-                        <input type="text" id="search-filter" name="search" placeholder="Search farmers...">
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-12" data-aos="fade-up">
+                <form id="filter-form" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="space-y-2">
+                        <label for="search-filter" class="block text-sm font-medium text-gray-700">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="search-filter" name="search" placeholder="Search farmers..." class="pl-10 w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300">
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="category-filter">Product Category</label>
-                        <select id="category-filter" name="category">
+                    <div class="space-y-2">
+                        <label for="category-filter" class="block text-sm font-medium text-gray-700">Product Category</label>
+                        <select id="category-filter" name="category" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 bg-white">
                             <option value="all">All Categories</option>
                             <option value="1">Vegetables</option>
                             <option value="2">Fruits</option>
@@ -75,9 +135,9 @@
                         </select>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="sort-filter">Sort By</label>
-                        <select id="sort-filter" name="sort">
+                    <div class="space-y-2">
+                        <label for="sort-filter" class="block text-sm font-medium text-gray-700">Sort By</label>
+                        <select id="sort-filter" name="sort" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 bg-white">
                             <option value="name-asc">Name (A-Z)</option>
                             <option value="name-desc">Name (Z-A)</option>
                             <option value="rating-desc">Rating (High to Low)</option>
@@ -85,52 +145,123 @@
                         </select>
                     </div>
                     
-                    <button type="submit" class="filter-btn">Apply Filters</button>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full md:w-auto px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 flex items-center justify-center transform hover:scale-105 hover:shadow-md">
+                            <i class="fas fa-filter mr-2"></i> Apply Filters
+                        </button>
+                    </div>
                 </form>
             </div>
             
             <!-- Farmers Grid -->
-            <div id="farmers-container" class="farmers-grid">
+            <div id="farmers-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Farmers will be loaded here dynamically -->
-                <p class="loading">Loading farmers...</p>
+                <div class="col-span-full flex justify-center items-center py-16">
+                    <div class="flex flex-col items-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
+                        <p class="text-gray-600 font-medium">Loading farmers...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>Farm Fresh</h3>
-                <p>Connecting farmers and consumers directly for fresher, healthier food.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Products</a></li>
-                    <li><a href="farmers.html">Farmers</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact Us</h3>
-                <p>Email: info@farmfresh.com</p>
-                <p>Phone: +91 123 456 7890</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+    <footer class="bg-secondary text-white pt-16 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div class="lg:col-span-1">
+                    <h3 class="text-xl font-bold mb-4">Farm Fresh</h3>
+                    <p class="text-gray-300 mb-6">Connecting farmers directly with consumers for the freshest organic produce.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition-colors duration-300">Home</a></li>
+                        <li><a href="products.html" class="text-gray-300 hover:text-white transition-colors duration-300">Products</a></li>
+                        <li><a href="farmers.html" class="text-gray-300 hover:text-white transition-colors duration-300">Farmers</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-white transition-colors duration-300">About Us</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-white transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">FAQ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Shipping Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Return Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
+                            <a href="mailto:ganeshlaxmankotwade@gmail.com" class="text-gray-300 hover:text-white transition-colors duration-300">ganeshlaxmankotwade@gmail.com</a>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone mt-1 mr-3 text-primary"></i>
+                            <a href="tel:+919373842949" class="text-gray-300 hover:text-white transition-colors duration-300">+91 9373842949</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2023 Farm Fresh. All rights reserved.</p>
+            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+                <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+    
+    <!-- Scroll to top button -->
+    <button class="fixed bottom-6 right-6 w-12 h-12 bg-primary hover:bg-primary-dark text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 opacity-0 invisible" id="scrollToTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    
     <!-- Scripts -->
+    <script src="public/js/navbar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new Navbar();
+            
+            // Initialize AOS animations
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out',
+                once: true
+            });
+            
+            // Initialize scroll animations for elements with fade-in-up class
+            const fadeElements = document.querySelectorAll('.fade-in-up');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                element.style.animationPlayState = 'paused';
+                observer.observe(element);
+            });
+        });
+    </script>
     <script src="mock_api.js"></script>
     <script src="mock_api_handlers.js"></script>
     <script src="farmers.js"></script>

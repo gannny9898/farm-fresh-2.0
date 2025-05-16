@@ -1,0 +1,208 @@
+/* Product Section Styles */
+.product-card {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-image-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.product-image {
+  transition: transform 0.5s ease-in-out;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.product-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .product-badge {
+  transform: scale(1.05);
+}
+
+.wishlist-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .wishlist-button {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.wishlist-button:hover {
+  color: #e53e3e !important;
+  transform: scale(1.1);
+}
+
+.product-title {
+  transition: color 0.3s ease;
+}
+
+.product-card:hover .product-title {
+  color: #4CAF50;
+}
+
+.product-price {
+  font-weight: 700;
+  color: #4CAF50;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .product-price {
+  transform: scale(1.05);
+}
+
+.cart-button {
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.cart-button:hover {
+  transform: translateY(-2px);
+}
+
+.cart-button::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.cart-button:hover::after {
+  transform: translateX(0);
+}
+
+/* Product grid animation */
+.product-grid {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered animation for product cards */
+.product-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
+}
+
+.product-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.product-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.product-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.product-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Product details hover effect */
+.product-details {
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .product-details {
+  transform: translateY(-5px);
+}
+
+/* Farmer info hover effect */
+.farmer-info {
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .farmer-info img {
+  border-color: #4CAF50;
+}
+
+/* Status badge pulse animation */
+.status-badge {
+  position: relative;
+}
+
+.status-badge::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: inherit;
+  animation: pulse 2s infinite;
+  opacity: 0;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* Product section header animation */
+.section-title {
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background-color: #4CAF50;
+  transition: width 0.3s ease;
+}
+
+.section-title:hover::after {
+  width: 100px;
+}

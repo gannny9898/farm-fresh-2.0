@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>About - Farm Fresh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="public/css/navbar.css">
+    <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#4CAF50',
+                            light: '#6ABF6E',
+                            dark: '#45a049',
+                        },
+                        secondary: {
+                            DEFAULT: '#2c3e50',
+                            light: '#3d5366',
+                            dark: '#1a2530',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-in-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom animations */
+        @keyframes expandWidth {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+        
+        .animate-expand-width {
+            animation: expandWidth 1s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- Include navbar template -->
+    <div id="navbar-container"></div>
+
+    <!-- About Hero Section -->
+    <section class="relative py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-secondary mb-4 fade-in-up">About Farm Fresh</h1>
+            <div class="w-24 h-1 bg-primary mx-auto mb-6 fade-in-up delay-100"></div>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto fade-in-up delay-200">Connecting farmers and consumers for a healthier, more sustainable food system</p>
+        </div>
+    </section>
+
+    <!-- Main About Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Column - Image -->
+                <div class="rounded-xl overflow-hidden shadow-lg transform transition-all duration-500 hover:scale-105" data-aos="fade-right">
+                    <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                         alt="Organic Farming" 
+                         class="w-full h-auto object-cover">
+                </div>
+                
+                <!-- Right Column - Content -->
+                <div data-aos="fade-left" data-aos-delay="200">
+                    <h2 class="text-3xl font-bold text-secondary mb-6">Our Mission</h2>
+                    <div class="w-20 h-1 bg-primary mb-8"></div>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        At Farm Fresh, we believe in a world where everyone has access to fresh, nutritious food grown with care for the environment and communities. Our mission is to create a direct connection between local farmers and consumers, eliminating unnecessary middlemen and ensuring fair prices for both parties.
+                    </p>
+                    <p class="text-gray-700 mb-8 leading-relaxed">
+                        We're committed to supporting sustainable farming practices, reducing food miles, and promoting transparency in the food system. By choosing Farm Fresh, you're not just getting the freshest produce possible – you're supporting local economies and environmentally responsible agriculture.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
+                                <i class="fas fa-leaf text-xl"></i>
+                            </div>
+                            <span class="font-medium">Sustainable Practices</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
+                                <i class="fas fa-handshake text-xl"></i>
+                            </div>
+                            <span class="font-medium">Fair Partnerships</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
+                                <i class="fas fa-heart text-xl"></i>
+                            </div>
+                            <span class="font-medium">Community Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-secondary mb-4">Our Values</h2>
+                <div class="w-24 h-1 bg-primary mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Value 1 -->
+                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
+                        <i class="fas fa-seedling text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">Sustainability</h3>
+                    <p class="text-gray-600">We prioritize environmentally responsible farming methods that protect our soil, water, and biodiversity for future generations.</p>
+                </div>
+                
+                <!-- Value 2 -->
+                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
+                        <i class="fas fa-balance-scale text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">Fairness</h3>
+                    <p class="text-gray-600">We ensure farmers receive fair compensation for their hard work while providing consumers with reasonable prices and exceptional quality.</p>
+                </div>
+                
+                <!-- Value 3 -->
+                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">Community</h3>
+                    <p class="text-gray-600">We build strong connections between producers and consumers, fostering a sense of community and shared purpose in our food system.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-secondary mb-4">Our Team</h2>
+                <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-3xl mx-auto">Meet the passionate individuals behind Farm Fresh who are dedicated to revolutionizing the way we think about food.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Team Member 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="John Doe" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-1 text-secondary">John Doe</h3>
+                        <p class="text-primary mb-3">Founder & CEO</p>
+                        <p class="text-gray-600 text-sm">With over 15 years of experience in sustainable agriculture, John leads our mission with passion and expertise.</p>
+                        <div class="mt-4 flex space-x-3">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Team Member 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Jane Smith" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-1 text-secondary">Jane Smith</h3>
+                        <p class="text-primary mb-3">Head of Operations</p>
+                        <p class="text-gray-600 text-sm">Jane ensures that our platform runs smoothly, connecting farmers and consumers with efficiency and care.</p>
+                        <div class="mt-4 flex space-x-3">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Team Member 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group" data-aos="fade-up" data-aos-delay="300">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Michael Johnson" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-1 text-secondary">Michael Johnson</h3>
+                        <p class="text-primary mb-3">Farmer Relations</p>
+                        <p class="text-gray-600 text-sm">With a background in agriculture, Michael works directly with our network of farmers to ensure quality and sustainability.</p>
+                        <div class="mt-4 flex space-x-3">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Team Member 4 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group" data-aos="fade-up" data-aos-delay="400">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Emily Chen" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-1 text-secondary">Emily Chen</h3>
+                        <p class="text-primary mb-3">Customer Experience</p>
+                        <p class="text-gray-600 text-sm">Emily is dedicated to ensuring that every customer has an exceptional experience with Farm Fresh from start to finish.</p>
+                        <div class="mt-4 flex space-x-3">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-primary/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center" data-aos="fade-up">
+            <h2 class="text-3xl font-bold text-secondary mb-4">Join Our Community</h2>
+            <p class="text-gray-700 mb-8 max-w-2xl mx-auto">Be part of the movement towards a more sustainable and connected food system</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="products.html" class="inline-flex items-center justify-center px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+                    Shop Fresh Products
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+                <a href="farmers.html" class="inline-flex items-center justify-center px-6 py-3 border border-primary text-primary hover:bg-primary hover:text-white font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+                    Meet Our Farmers
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-secondary text-white pt-16 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div class="lg:col-span-1">
+                    <h3 class="text-xl font-bold mb-4">Farm Fresh</h3>
+                    <p class="text-gray-300 mb-4">Connecting farmers and consumers for a healthier, more sustainable food system.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition-colors duration-300">Home</a></li>
+                        <li><a href="products.html" class="text-gray-300 hover:text-white transition-colors duration-300">Products</a></li>
+                        <li><a href="farmers.html" class="text-gray-300 hover:text-white transition-colors duration-300">Farmers</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-white transition-colors duration-300">About</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-white transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Customer Service</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">FAQ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Shipping Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Returns & Refunds</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                            <span class="text-gray-300">123 Farm Road, Countryside, State 12345</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-3 text-primary"></i>
+                            <span class="text-gray-300">(123) 456-7890</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-primary"></i>
+                            <span class="text-gray-300">info@farmfresh.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-6">
+                <p class="text-center text-gray-400">&copy; 2025 Farm Fresh. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    
+    <!-- Navbar Script -->
+    <script src="public/js/navbar.js"></script>
+    
+    <script>
+        // Initialize AOS animations
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out',
+                once: true
+            });
+            
+            // Initialize scroll animations for elements with fade-in-up class
+            const fadeElements = document.querySelectorAll('.fade-in-up');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                element.style.animationPlayState = 'paused';
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

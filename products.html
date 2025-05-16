@@ -3,64 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Products - Farm Fresh</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="products.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="public/css/navbar.css">
+    <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="public/css/products.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4CAF50',
+                        'primary-dark': '#3e8e41',
+                        secondary: '#2c3e50'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="logo">
-                <a href="index.html">
-                    <i class="fas fa-leaf"></i>
-                    <span>Farm Fresh</span>
-                </a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html" class="active">Products</a></li>
-                <li><a href="farmers.html">Farmers</a></li>
-                <li><a href="#" id="dashboard-link" onclick="redirectToDashboard(); return false;">Dashboard</a></li>
-                <li>
-                    <a href="cart.html" class="cart-link">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="auth-links">
-                <a href="login.html" class="login-btn">Login</a>
-                <a href="register.html" class="register-btn">Register</a>
-            </div>
-            <div class="user-profile">
-                <img src="https://via.placeholder.com/40" alt="User Profile" class="profile-img">
-                <span class="user-name">John Doe</span>
-                <div class="dropdown-content">
-                    <a href="#" id="profile-link">Profile</a>
-                    <a href="#" id="logout-btn">Logout</a>
-                </div>
-            </div>
-            <div class="hamburger">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
-        </div>
-    </nav>
+    <!-- Include navbar template -->
+    <div id="navbar-container"></div>
 
     <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <h1 class="page-title">Products</h1>
+    <main class="pt-24 pb-16 bg-gray-50 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900">All Products</h1>
+                <p class="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">Fresh, organic products directly from local farmers</p>
+            </div>
             
             <!-- Filter and Search Section -->
-            <div class="filter-search-container">
-                <form id="filter-form" class="filter-form">
-                    <div class="form-group">
-                        <label for="category-filter">Category</label>
-                        <select id="category-filter" name="category">
+            <div class="bg-white rounded-xl shadow-sm p-5 mb-8">
+                <form id="filter-form" class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                    <div class="space-y-2">
+                        <label for="category-filter" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select id="category-filter" name="category" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-20 transition-all py-2.5 px-3 border">
                             <option value="all">All Categories</option>
                             <option value="1">Vegetables</option>
                             <option value="2">Fruits</option>
@@ -70,14 +57,19 @@
                         </select>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="search-filter">Search</label>
-                        <input type="text" id="search-filter" name="search" placeholder="Search products...">
+                    <div class="space-y-2">
+                        <label for="search-filter" class="block text-sm font-medium text-gray-700">Search</label>
+                        <div class="relative">
+                            <input type="text" id="search-filter" name="search" placeholder="Search products..." class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-20 transition-all py-2.5 px-3 pl-10 border">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="sort-filter">Sort By</label>
-                        <select id="sort-filter" name="sort">
+                    <div class="space-y-2">
+                        <label for="sort-filter" class="block text-sm font-medium text-gray-700">Sort By</label>
+                        <select id="sort-filter" name="sort" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-20 transition-all py-2.5 px-3 border">
                             <option value="name-asc">Name (A-Z)</option>
                             <option value="name-desc">Name (Z-A)</option>
                             <option value="price-asc">Price (Low to High)</option>
@@ -85,14 +77,21 @@
                         </select>
                     </div>
                     
-                    <button type="submit" class="filter-btn">Apply Filters</button>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white py-2.5 px-4 rounded-lg transition-all duration-300 font-medium flex items-center justify-center">
+                            <i class="fas fa-filter mr-2"></i> Apply Filters
+                        </button>
+                    </div>
                 </form>
             </div>
             
             <!-- Products Grid -->
-            <div id="products-container" class="products-grid">
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 <!-- Products will be loaded here dynamically -->
-                <p class="loading">Loading products...</p>
+                <div class="col-span-full text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mr-2"></div>
+                    <p class="text-gray-600 font-medium">Loading products...</p>
+                </div>
             </div>
         </div>
     </main>
@@ -131,6 +130,12 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="public/js/navbar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new Navbar();
+        });
+    </script>
     <script src="mock_api.js"></script>
     <script src="mock_api_handlers.js"></script>
     <script src="products.js"></script>

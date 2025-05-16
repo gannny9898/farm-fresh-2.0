@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-secondary bg-gray-50 min-h-screen overflow-x-hidden;
+  }
+  h1 {
+    @apply text-4xl font-bold mb-4;
+  }
+  h2 {
+    @apply text-3xl font-bold mb-4;
+  }
+  h3 {
+    @apply text-xl font-semibold mb-2;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-dark focus:ring-primary;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-secondary border border-gray-200 hover:bg-gray-50 focus:ring-gray-300;
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md;
+  }
+  .input {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all duration-300;
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  .badge-primary {
+    @apply badge bg-primary-light text-white;
+  }
+  .badge-secondary {
+    @apply badge bg-gray-100 text-gray-800;
+  }
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+}
+
+/* Custom animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Navbar specific styles */
+.navbar-fixed {
+  @apply fixed top-0 left-0 right-0 z-50 bg-white shadow-sm transition-all duration-300;
+}
+
+/* Hero section specific styles */
+.hero-overlay {
+  @apply absolute inset-0 bg-gradient-to-r from-secondary/70 to-primary/50 mix-blend-multiply;
+}
+
+/* Product card specific styles */
+.product-card-hover {
+  @apply transform transition-transform duration-300 hover:-translate-y-2;
+}
+
+/* Testimonial specific styles */
+.testimonial-card {
+  @apply relative p-6 bg-white rounded-xl shadow-sm border border-gray-100;
+}
+
+.testimonial-card::before {
+  content: '"';
+  @apply absolute top-2 left-4 text-6xl text-primary/20 font-serif;
+}
